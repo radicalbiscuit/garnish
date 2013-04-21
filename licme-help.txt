@@ -1,0 +1,18 @@
+The licme command requires at least one argument specifying
+the license you would like to use in your project.
+
+Supported options:
+    -l  list licenses available through licme
+    -h  display this help file
+    -a  specify an author name
+    -y  specify a copyright year (default: current year)
+    -f  force licme to overight the existing LICENSE
+
+
+Usage examples:
+
+    # Install the MIT license
+    $ licme mit -a "Tim the Beaver"
+
+    # Install the GPL3 license
+    $ licme gpl3 -a "Richard Stallman" 
