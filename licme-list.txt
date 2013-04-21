@@ -3,8 +3,9 @@ Licme supports many popular and interesting software licenses including:
     Popular:
         artistic  Perl Foudation Artistic License, Version 2.0
         agpl3     GNU Affero General Public License, Version 3.0
-        apache2   Apache License 2.0
-        bsd3      BSD 3-Clause Version
+        apache2   Apache License, Version 2.0
+        bsd3      BSD 3-Clause License 
+        bsd2      BSD 2-Clause License 
         gpl2      GNU General Public License, Version 2.0
         gpl3      GNU General Public License, Version 3.0
         lgpl3     GNU Lesser General Public License, Version 3.0
