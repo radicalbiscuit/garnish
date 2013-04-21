@@ -1,5 +1,4 @@
-The licme command requires at least one argument specifying
-the license you would like to use in your project.
+LICME Help:
 
 Supported options:
     -l  list licenses available through licme
@@ -7,6 +6,10 @@ Supported options:
     -a  specify an author name
     -y  specify a copyright year (default: current year)
     -f  force licme to overight the existing LICENSE
+
+licme requires at least two options.  The first should be the name of the 
+license you want to use. The second requirement is that you specify the
+copyright holders using the -a option.
 
 
 Usage examples:
@@ -16,3 +19,6 @@ Usage examples:
 
     # Install the GPL3 license
     $ licme gpl3 -a "Richard Stallman" 
+
+    # Install CRAPL license for crappy research code
+    $ licme crapl -a "Matt Might"
