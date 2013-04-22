@@ -90,7 +90,7 @@ def already_has_license():
         print 'This repository appears to contain license information already.'
         print 'If you would like to apply a new license using licme, first'
         print 'remove any license files such as LICENSE, COPYING, or UNLICENSE.'
-        print '\n   Conflicting file: {0}'.format(possible_licenses[0])
+        print '\n   Conflicting files: {0}'.format(' '.join(possible_licenses))
         print '\nNo changes have been made.'
         sys.exit(1)
     else:
@@ -107,7 +107,8 @@ def find_readme():
         return readme_file[0]
 
 def write_readme():
-    with open(find_readme(),'a') as readme:
+    readme_filename = find_readme()
+    with open(readme_filename,'a') as readme:
         with open(os.path.join('readme-statements',args.license),'r') as ADD_TO_README:
             text_to_add = ADD_TO_README.read()
             text_to_add = text_to_add.replace('OWNER_NAME',
@@ -115,6 +116,7 @@ def write_readme():
             text_to_add = text_to_add.replace('COPYRIGHT_YEAR', args.year)
             text_to_add = text_to_add.replace('PROGRAM_NAME', args.program_name)
             readme.writelines('\n\n'+ text_to_add)
+            print 'Copyright statement added to ' + readme_filename
 
 def install_license():
     lic_source = os.path.join('licenses',args.license)
@@ -122,6 +124,7 @@ def install_license():
         with open(lic_source,'r') as license_source:
             the_license = license_source.read()
             new_license_file.write(the_license)
+            print LIC_DETAILS[args.license][1] + ' file created'
 
 if __name__ == "__main__":
     check_valid_license_choice()
