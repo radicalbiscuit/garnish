@@ -22,5 +22,5 @@ Licme supports many popular and interesting software licenses including:
     Other:
         crapl       Community Research and Academic Programming License
         unlicense   Release code to public domain.  See unlicense.org.   
-
+        wtfpl       Do What the Fuck You Want To Public License, Version 2
 
