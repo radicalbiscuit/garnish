@@ -8,26 +8,34 @@ import os
 
 CWD = os.getcwd()
 
+# This dictionary keys license argument to ["longform license name", "license filename",
+# boolean: recommend in-file notice?]
 LIC_DETAILS = {
-#        'artistic': ['Perl Foudation Artistic License, Version 2.0', 'LICENSE'],
-             'agpl3': ['GNU Affero General Public License, Version 3.0', 'LICENSE'],
-#             'apache2': ['Apache License 2.0', 'LICENSE'],
-#             'bsd3': ['BSD 3-Clause License', 'LICENSE'],
-#             'bsd2': ['BSD 2-Clause License', 'LICENSE'],
-             'gpl2': ['GNU General Public License, Version 2.0', 'LICENSE'],
-             'gpl3': ['GNU General Public License, Version 3.0', 'LICENSE'],
+#        'artistic': ['Perl Foudation Artistic License, Version 2.0', 'LICENSE',
+#        True],
+             'agpl3': ['GNU Affero General Public License, Version 3.0',
+                 'LICENSE', True],
+#             'apache2': ['Apache License 2.0', 'LICENSE', True],
+#             'bsd3': ['BSD 3-Clause License', 'LICENSE', False],
+#             'bsd2': ['BSD 2-Clause License', 'LICENSE', False],
+             'gpl2': ['GNU General Public License, Version 2.0', 'COPYING', True],
+             'gpl3': ['GNU General Public License, Version 3.0', 'COPYING', True],
 #             'lgpl3': ['GNU Lesser General Public License, Version 3.0'
-#                 ,'COPYING.LESSER'],
-             'mit': ['MIT License' ,'LICENSE'],
-#             'mpl2': ['Mozilla Public License, Version 2.0', 'LICENSE'],
-             'gpl1': ['GNU General Public License, Version 1.0', 'LICENSE'],
-#            'lgpl2': ['GNU Lesser General Public License, Version 2.0', 'COPYING.LESSER'],
-#             'lgpl2.1': ['GNU Lesser General Public License, Version 2.1', 'COPYING.LESSER'],
-#             'mpl1.1': ['Mozilla Public License, Version 1.1', 'LICENSE'],
-             'crapl': ['Community Research and Academic Programming License', 'LICENSE'],
-#             'unlicense': ['Release code to public domain.  See unlicense.org.', 'UNLICENSE'],
+#                 ,'COPYING.LESSER', True],
+             'mit': ['MIT License' ,'LICENSE', False],
+#             'mpl2': ['Mozilla Public License, Version 2.0', 'LICENSE', True],
+             'gpl1': ['GNU General Public License, Version 1.0', 'COPYING', True],
+#            'lgpl2': ['GNU Lesser General Public License, Version 2.0',
+#            'COPYING.LESSER', True],
+#             'lgpl2.1': ['GNU Lesser General Public License, Version 2.1',
+#             'COPYING.LESSER', True],
+#             'mpl1.1': ['Mozilla Public License, Version 1.1', 'LICENSE', True],
+             'crapl': ['Community Research and Academic Programming License',
+                 'LICENSE', False],
+#             'unlicense': ['Unlicense', 'UNLICENSE', False],
              'wtfpl': ['Do What the Fuck You Want To Public License, Version 2',
-             'LICENSE']}
+             'LICENSE', False]}
+
 
 COMMENT_CHARS = {
         '.py':'#',
