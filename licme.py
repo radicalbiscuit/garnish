@@ -81,6 +81,11 @@ parser.add_argument('-r', '--remove-sourcefile-headers',
     action='store_true',
     default=False,
     dest='remove_headers')
+parser.add_argument('-q', '--quiet',
+    help='supress some informational output',
+    action='store_true',
+    default=False,
+    dest='q')
 
 args = parser.parse_args()
 
@@ -280,6 +285,7 @@ def get_files_to_add_header(exclusions, whitelist):
     # done with endswith instead of regex to keep this flexible.
 
     pathlist = []
+    excluded_files = []
     for dirname, subdirs, files in os.walk(os.getcwd()):
         for subdir in subdirs:
             if re.match('^\.', subdir) != None:
@@ -290,6 +296,15 @@ def get_files_to_add_header(exclusions, whitelist):
             white = [item.endswith(x) for x in whitelist].count(True)
             if white and not excl:
                 pathlist.append(os.path.join(dirname, item))
+            else:
+                excluded_files.append(os.path.join(item))
+
+        if excluded_files and not args.q:
+            print 'The following files did not receive an in-file licensing  notice, '
+            print 'because you specified them or I wasn\'t sure what type of file it '
+            print 'was based on the file extension: '
+            for e in excluded_files:
+                print e
 
     return pathlist
 
