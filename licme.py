@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import argparse
@@ -238,7 +237,7 @@ def remove_headers_from_files(files_to_fix, comment_chars):
     for file_to_fix in files_to_fix:
         filetype = re.search('\..+$', file_to_fix).group(0)
         if filetype in header_messages.keys():
-            add_header_to_file(file_to_check, header_messages[filetype])
+            remove_header_from_file(file_to_fix, header_messages[filetype])
         else:
             header_messages[filetype] = build_header_message(args, filetype, comment_chars)
             remove_header_from_file(file_to_fix, header_messages[filetype])
@@ -251,8 +250,11 @@ def remove_header_from_file(filename, header):
     with open(filename, 'r') as original_file:
         original_text = original_file.readlines()
         start, end = 0, 0
-        start = original_text.index(header_start)
-        end = original_text.index(header_end)
+        try:
+            start = original_text.index(header_start)
+            end = original_text.index(header_end)
+        except:
+            pass
 
         modified_text = original_text[0:start] + original_text[end+1:]
 
@@ -337,7 +339,8 @@ def get_files_to_add_header(exclusions, whitelist):
         print 'because you specified them or I wasn\'t sure what type of file it '
         print 'was based on the file extension: '
         for e in excluded_files:
-            print e
+            print '    ' + e
+        print
 
     return pathlist
 
