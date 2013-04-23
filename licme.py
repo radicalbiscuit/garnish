@@ -257,7 +257,7 @@ def remove_header_from_file(filename, header):
         modified_text = original_text[0:start] + original_text[end+1:]
 
     with open(filename, 'w') as modified_file:
-        modified_file.write(modified_text)
+        modified_file.writelines(modified_text)
 
 
 def build_header_message(args, filetype):
