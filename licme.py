@@ -130,7 +130,7 @@ def find_readme():
     else:
         return readme_file[0]
 
-def write_readme():
+def update_readme():
     readme_filename = find_readme()
     with open(readme_filename,'a') as readme:
         with open(os.path.join('readme-statements',args.license),'r') as ADD_TO_README:
@@ -139,14 +139,14 @@ def write_readme():
             readme.writelines('\n\n'+ text_to_add)
             print 'Copyright statement added to ' + readme_filename
 
-def fill_template(text, author, year, program, filename):
-    text = text.replace('OWNER_NAME', author)
-    text = text.replace('COPYRIGHT_YEAR', year)
-    text = text.replace('PROGRAM_NAME', program)
-    text = text.replace('LICENSE_FILENAME', filename)
+def fill_template(args):
+    text = text.replace('OWNER_NAME', args.copyright_holder)
+    text = text.replace('COPYRIGHT_YEAR', args.year)
+    text = text.replace('PROGRAM_NAME', args.program_name)
+    text = text.replace('LICENSE_FILENAME', LIC_DETAILS[args.license][1])
     return text
 
-def install_license():
+def install_license(args):
     lic_source = os.path.join('licenses',args.license)
     with open(LIC_DETAILS[args.license][1],'a') as new_license_file:
         with open(lic_source,'r') as license_source:
@@ -154,11 +154,7 @@ def install_license():
             new_license_file.write(the_license)
             print LIC_DETAILS[args.license][1] + ' file created'
 
-def build_header_message(args, filetype):
-   # Given license information in the args and a file extension string in
-   # filetype variable, return a string containing the appropriate in-file
-   # licensing header string.
-
+def install_headers(args):
     comments_chars = {
         '.py':'#',
         '.rb': '#',
@@ -215,6 +211,22 @@ def build_header_message(args, filetype):
         '.ss': ';'
             }
 
+    exclude = raw_input('Would you like to exclude any files from in-file license notice? (y/n) ') in 'yY'
+    if exclude:
+        exclusions = raw_input('Enter extensions or filenames, space delimited: ')
+        exclusions = exclusions.split(' ')
+        exclusions = [x.replace('*', '') for x in exclusions] # Sorry, no glob support
+    else:
+        exclusions = []
+
+    files_to_prepend = get_files_to_add_header(exclusions, comment_chars.keys())
+    add_headers_to_files(args, files_to_prepend)
+
+def build_header_message(args, filetype):
+   # Given license information in the args and a file extension string in
+   # filetype variable, return a string containing the appropriate in-file
+   # licensing header string.
+
     if filetype in comments_chars.keys():
         comment_char = comments_chars[filetype]
     else:
@@ -259,9 +271,32 @@ def add_headers_to_files(args, list_of_files):
             add_header_to_file(file_to_check, header_messages[filetype])
 
 
+def get_files_to_add_header(exclusions, whitelist):
+    # Returns a recursive list of all files an all directories,
+    # excluding .subdirectories and any explicit exclusions.
+    # The exclusions argument should be a list of strings,
+    # either file extensions or filenames.  For example,
+    # ['.txt', 'README.md', 'not_this.py'].  Comparisons are
+    # done with endswith instead of regex to keep this flexible.
+
+    pathlist = []
+    for dirname, subdirs, files in os.walk(os.getcwd()):
+        for subdir in subdirs:
+            if re.match('^\.', subdir) != None:
+                subdirs.remove(subdir) # Ignore dot-directories
+
+        for item in files:
+            excl = [item.endswith(x) for x in exclusions].count(True)
+            white = [item.endswith(x) for x in whitelist].count(True)
+            if white and not excl:
+                pathlist.append(os.path.join(dirname, item))
+
+    return pathlist
+
 if __name__ == "__main__":
     check_arguments()
     if not already_has_license():
         install_license()
+        install_headers()
         if args.r:
-            write_readme()
+            update_readme()
