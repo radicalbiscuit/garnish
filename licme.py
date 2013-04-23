@@ -240,19 +240,18 @@ def build_header_message(args, filetype):
 def add_header_to_file(filename, header_message):
     # Add a given license header message to the file
     # with name "filename"
-    with open(filename, 'r+') as filetoedit:
-        file_contents = filetoedit.read()
+    with open(filename, 'r') as original:
+        file_contents = original.read()
+    with open(filename, 'w') as modified:
+        modified.write(head_message + file_contents)
 
-        complete_header = build_header_message(args.license)
-
-        filetoedit.write(complete_header + file_contents)
 
 def add_headers_to_files(args, list_of_files):
     # Take a list of filenames and add an appropriate
     # license header to each one.
     header_messages = {}
     for file_to_check in list_of_files:
-        filetype = re.search('\..+', filename).group(0)
+        filetype = re.search('\..+$', filename).group(0)
         if filetype in header_messages.keys():
             add_header_to_file(file_to_check, header_messages[filetype])
         else:
