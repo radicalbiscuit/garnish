@@ -261,11 +261,8 @@ def add_headers_to_files(args, list_of_files):
 
 
 if __name__ == "__main__":
-    add_header_to_file('testfile.py')
-    add_header_to_file('testfile.rb')
-    add_header_to_file('testfile.scala')
-    # check_arguments()
-    # if not already_has_license():
-    #     install_license()
-     #    if args.r:
-      #       write_readme()
+    check_arguments()
+    if not already_has_license():
+        install_license()
+        if args.r:
+            write_readme()
