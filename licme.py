@@ -145,12 +145,12 @@ def update_readme():
             readme.writelines('\n\n'+ text_to_add)
             print 'Copyright statement added to ' + readme_filename
 
-def fill_template(args):
-    text = text.replace('OWNER_NAME', args.copyright_holder)
-    text = text.replace('COPYRIGHT_YEAR', args.year)
-    text = text.replace('PROGRAM_NAME', args.program_name)
-    text = text.replace('LICENSE_FILENAME', LIC_DETAILS[args.license][1])
-    return text
+def fill_template(temp):
+    temp = temp.replace('OWNER_NAME', args.copyright_holder)
+    temp = temp.replace('COPYRIGHT_YEAR', args.year)
+    temp = temp.replace('PROGRAM_NAME', args.program_name)
+    temp = temp.replace('LICENSE_FILENAME', LIC_DETAILS[args.license][1])
+    return temp
 
 def install_license():
     lic_source = os.path.join('licenses',args.license)
@@ -231,7 +231,7 @@ def install_headers():
             exclusions = []
 
         files_to_prepend = get_files_to_add_header(exclusions, comment_chars.keys())
-        add_headers_to_files(args, files_to_prepend)
+        add_headers_to_files(args, files_to_prepend, comment_chars)
 
 def remove_headers_from_files(files_to_fix, comment_chars):
     header_messages = {}
@@ -240,7 +240,7 @@ def remove_headers_from_files(files_to_fix, comment_chars):
         if filetype in header_messages.keys():
             add_header_to_file(file_to_check, header_messages[filetype])
         else:
-            header_messages[filetype] = build_header_message(args, filetype)
+            header_messages[filetype] = build_header_message(args, filetype, comment_chars)
             remove_header_from_file(file_to_fix, header_messages[filetype])
 
 def remove_header_from_file(filename, header):
@@ -260,13 +260,13 @@ def remove_header_from_file(filename, header):
         modified_file.writelines(modified_text)
 
 
-def build_header_message(args, filetype):
+def build_header_message(args, filetype, comment_chars):
    # Given license information in the args and a file extension string in
    # filetype variable, return a string containing the appropriate in-file
    # licensing header string.
 
     if filetype in comment_chars.keys():
-        comment_char = comments_chars[filetype]
+        comment_char = comment_chars[filetype]
     else:
         print 'Could not add header to {0}. Unknown filetype.'.format(filename)
         return
@@ -293,10 +293,10 @@ def add_header_to_file(filename, header_message):
     with open(filename, 'r') as original:
         file_contents = original.read()
     with open(filename, 'w') as modified:
-        modified.write(head_message + file_contents)
+        modified.write(header_message + file_contents)
 
 
-def add_headers_to_files(args, list_of_files):
+def add_headers_to_files(args, list_of_files, comment_chars):
     # Take a list of filenames and add an appropriate
     # license header to each one.
     header_messages = {}
@@ -305,7 +305,7 @@ def add_headers_to_files(args, list_of_files):
         if filetype in header_messages.keys():
             add_header_to_file(file_to_check, header_messages[filetype])
         else:
-            header_messages[filetype] = build_header_message(args, filetype)
+            header_messages[filetype] = build_header_message(args, filetype, comment_chars)
             add_header_to_file(file_to_check, header_messages[filetype])
 
 
@@ -332,12 +332,12 @@ def get_files_to_add_header(exclusions, whitelist):
             else:
                 excluded_files.append(os.path.join(item))
 
-        if excluded_files and not args.q:
-            print 'The following files did not receive an in-file licensing  notice, '
-            print 'because you specified them or I wasn\'t sure what type of file it '
-            print 'was based on the file extension: '
-            for e in excluded_files:
-                print e
+    if excluded_files and not args.q:
+        print 'The following files did not receive an in-file licensing  notice, '
+        print 'because you specified them or I wasn\'t sure what type of file it '
+        print 'was based on the file extension: '
+        for e in excluded_files:
+            print e
 
     return pathlist
 
