@@ -1,3 +1,10 @@
+# Status: In Development; minimally working, mostly broken 
+
+Although this software has been tested, there is a slim chance that any files
+handled by the software could be lost.  Consequently, **do not use licme for
+data that has not been commited to your reposity.**  I am not responsible for
+your data loss.
+
 # LICME - taking the work out of boilerplate licensing 
 
 A recent study found that (only 15% of github projects)[http://www.theregister.co.uk/2013/04/18/github_licensing_study/] have clearly stated license terms.  Omitting a license from your open source project limits its usefulness to the community.  
