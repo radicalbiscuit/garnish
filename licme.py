@@ -119,7 +119,8 @@ def already_has_license():
         print 'This repository appears to contain license information already.'
         print 'If you would like to apply a new license using licme, first'
         print 'remove any license files such as LICENSE, COPYING, or UNLICENSE.'
-        print '\n   Conflicting files: {0}'.format(' '.join(possible_licenses))
+        if not args.q:
+            print '\n   Conflicting files: \n{0}'.format('\n    '.join(possible_licenses))
         print '\nNo changes have been made.'
         sys.exit(1)
     else:
@@ -216,16 +217,48 @@ def install_headers(args):
         '.ss': ';'
             }
 
-    exclude = raw_input('Would you like to exclude any files from in-file license notice? (y/n) ') in 'yY'
-    if exclude:
-        exclusions = raw_input('Enter extensions or filenames, space delimited: ')
-        exclusions = exclusions.split(' ')
-        exclusions = [x.replace('*', '') for x in exclusions] # Sorry, no glob support
-    else:
+    if args.remove_headers:
         exclusions = []
+        files_to_fix = get_files_to_add_header(exclusions, comment_chars.keys())
+        remove_headers_from_files(files_to_fix, comment_chars)
+    else:
+        exclude = raw_input('Would you like to exclude any files from in-file license notice? (y/n) ') in 'yY'
+        if exclude:
+            exclusions = raw_input('Enter extensions or filenames, space delimited: ')
+            exclusions = exclusions.split(' ')
+            exclusions = [x.replace('*', '') for x in exclusions] # Sorry, no glob support
+        else:
+            exclusions = []
 
-    files_to_prepend = get_files_to_add_header(exclusions, comment_chars.keys())
-    add_headers_to_files(args, files_to_prepend)
+        files_to_prepend = get_files_to_add_header(exclusions, comment_chars.keys())
+        add_headers_to_files(args, files_to_prepend)
+
+def remove_headers_from_files(files_to_fix, comment_chars):
+    header_messages = {}
+    for file_to_fix in files_to_fix:
+        filetype = re.search('\..+$', file_to_fix).group(0)
+        if filetype in header_messages.keys():
+            add_header_to_file(file_to_check, header_messages[filetype])
+        else:
+            header_messages[filetype] = build_header_message(args, filetype)
+            remove_header_from_file(file_to_fix, header_messages[filetype])
+
+def remove_header_from_file(filename, header):
+    header = header.split('\n')
+    header_start = header[0]
+    header_end = header[-1]
+
+    with open(filename, 'r') as original_file:
+        original_text = original_file.readlines()
+        start, end = 0, 0
+        start = original_text.index(header_start)
+        end = original_text.index(header_end)
+
+        modified_text = original_text[0:start] + original_text[end+1:]
+
+    with open(filename, 'w') as modified_file:
+        modified_file.write(modified_text)
+
 
 def build_header_message(args, filetype):
    # Given license information in the args and a file extension string in
@@ -307,6 +340,8 @@ def get_files_to_add_header(exclusions, whitelist):
                 print e
 
     return pathlist
+
+
 
 if __name__ == "__main__":
     check_arguments()
