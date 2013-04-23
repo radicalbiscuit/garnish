@@ -220,6 +220,7 @@ def install_headers():
     if args.remove_headers:
         exclusions = []
         files_to_fix = get_files_to_add_header(exclusions, comment_chars.keys())
+        print len(files_to_fix)
         remove_headers_from_files(files_to_fix, comment_chars)
     else:
         exclude = raw_input('Would you like to exclude any files from in-file license notice? (y/n) ') in 'yY'
@@ -352,7 +353,9 @@ def get_files_to_add_header(exclusions, whitelist):
 
 if __name__ == "__main__":
     check_arguments()
-    if not already_has_license():
+    if args.remove_headers:
+        install_headers()
+    elif not already_has_license():
         install_license()
         install_headers()
         if args.r:
