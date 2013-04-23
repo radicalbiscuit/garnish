@@ -41,7 +41,7 @@ COMMENT_CHARS = {
         '.phps': '#',
         '.cobra': '#',
         '.sh': '#',
-        '.tex':'%', 
+        '.tex': '%',
         '.hs': '--',
         '.lhs': '--',
         '.sql': '--',
@@ -87,12 +87,12 @@ COMMENT_CHARS = {
 
 parser = argparse.ArgumentParser(prog="LICME",
         description="""
-        LICME is designed to help take the pain out of boilerplate licensing.
-        You specify the copyright holder and the name of a popular open
-        source license, and licme will create the appropriate LICENSE file
-        in your project directory.  Copyright and license information will be
-        appended to your existing README file, or one will be created for you
-        if it does not already exist.
+    LICME is designed to help take the pain out of boilerplate licensing.
+    You specify the copyright holder and the name of a popular open
+    source license, and licme will create the appropriate LICENSE file
+    in your project directory.  Copyright and license information will be
+    appended to your existing README file, or one will be created for you
+    if it does not already exist.
 
         """,
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -118,13 +118,28 @@ parser.add_argument('-n', '--no-readme',
     action="store_false",
     default=True,
     dest="r")
+parser.add_argument('-a', '--add-sourcefile-headers',
+    help='add short copyright and license notice to individual source files',
+    action='store_true',
+    default=False,
+    dest='add_headers')
+parser.add_argument('-r', '--remove-sourcefile-headers',
+    help='remove in-file license notices previously applied by licme',
+    action='store_true',
+    default=False,
+    dest='remove_headers')
 
 args = parser.parse_args()
 
-def check_valid_license_choice():
+def check_arguments():
+    help = 'Try -h for help information.'
     if args.license not in LIC_DETAILS.keys():
-        print '''You have entered an invalid license name.  Use -h to see the
-        list of licenses and their abbreviations that licme knows about.'''
+        print 'You have entered an invalid license name.'
+        print help
+        sys.exit(1)
+    if args.remove_headers and args.add_headers:
+        print 'You have used conflicting header options.'
+        print help
         sys.exit(1)
 
 def already_has_license():
@@ -183,7 +198,7 @@ def install_license():
             print LIC_DETAILS[args.license][1] + ' file created'
 
 if __name__ == "__main__":
-    check_valid_license_choice()
+    check_arguments()
     if not already_has_license():
         install_license()
         if args.r:
