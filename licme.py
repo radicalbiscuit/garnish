@@ -47,9 +47,41 @@ parser = argparse.ArgumentParser(prog="LICME",
     appended to your existing README file, or one will be created for you
     if it does not already exist.
 
+BASIC EXAMPLE
+
+    $ licme gpl3 "Free Software Foundation, Inc." "Emacs 24"
+    $ licme mit "Jennifer Hamon" "Licme"
+
         """,
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog=open('licme-list.txt').read()+ """
+        epilog="""
+SUPPORTED LICENSES
+    Licme supports many popular and interesting software licenses.
+
+    Popular:
+            artistic  Perl Foudation Artistic License, Version 2.0
+            agpl3     GNU Affero General Public License, Version 3.0
+            apache2   Apache License, Version 2.0
+            bsd3      BSD 3-Clause License
+            bsd2      BSD 2-Clause License
+            gpl2      GNU General Public License, Version 2.0
+            gpl3      GNU General Public License, Version 3.0
+            lgpl3     GNU Lesser General Public License,Version 3.0
+            mit       MIT License
+            mpl2      Mozilla Public License, Version 2.0
+
+    Old and Deprecated:
+            gpl1      GNU General Public License, Version 1.0
+            lgpl2     GNU Lesser General Public License, Version 2.0
+            lgpl2.1   GNU Lesser General Public License, Version 2.1
+            mpl1.1    Mozilla Public License, Version 1.1
+
+    Other:
+            crapl       Community Research and Academic Programming License
+            unlicense   Release code to public domain.  See unlicense.org.
+            wtfpl       Do What the Fuck You Want To Public License, Version 2
+
+
 
 CONTRIBUTING
     If there is another license you would like to see included in licme,
@@ -220,7 +252,7 @@ def install_headers():
     if args.remove_headers:
         exclusions = []
         files_to_fix = get_files_to_add_header(exclusions, comment_chars.keys())
-        print len(files_to_fix)
+        print len(files_to_fix), files_to_fix
         remove_headers_from_files(files_to_fix, comment_chars)
     else:
         exclude = raw_input('Would you like to exclude any files from in-file license notice? (y/n) ') in 'yY'
@@ -245,23 +277,19 @@ def remove_headers_from_files(files_to_fix, comment_chars):
             remove_header_from_file(file_to_fix, header_messages[filetype])
 
 def remove_header_from_file(filename, header):
-    header = header.split('\n')
-    header_start = header[0]
-    header_end = header[-1]
-
     with open(filename, 'r') as original_file:
         original_text = original_file.readlines()
-        start, end = 0, 0
-        try:
-            start = original_text.index(header_start)
-            end = original_text.index(header_end)
-        except:
-            pass
+        beginmsg = ':::::::::::::::: BEGIN LICENSE BLOCK :::::::::::::::'
+        endmsg = '::::::::::::::::  END LICENSE BLOCK  :::::::::::::::'
 
-        if end != 0:
+        start = [k for k,v in enumerate(original_text) if beginmsg in v][0]
+        end = [k for k,v in enumerate(original_text) if endmsg in v][1]
+        if end != []:
             modified_text = original_text[0:start] + original_text[end+1:]
+            print 'nuhhhhhh'
         else:
             modified_text = original_text
+            print 'asdfasdf'
 
     with open(filename, 'w') as modified_file:
         modified_file.writelines(modified_text)
@@ -278,18 +306,13 @@ def build_header_message(args, filetype, comment_chars):
         print 'Could not add header to {0}. Unknown filetype.'.format(filename)
         return
 
-    start_msg_label = ' BEGIN LICENSE BLOCK '
-    end_msg_label = ' END LICENSE BLOCK '
-    filler = 10 * comment_char
-    fillern = filler + '\n'
+    start_msg = comment_char + ' :::::::::::::::: BEGIN LICENSE BLOCK :::::::::::::::'
+    end_msg = comment_char + ' ::::::::::::::::  END LICENSE BLOCK  :::::::::::::::'
 
     notice = open(os.path.join('header-statements',args.license),'r').readlines()
     notice = map(fill_template, notice)
     notice = [comment_char + ' ' + x for x in notice]
     notice = ''.join(notice)
-
-    start_msg = filler + start_msg_label + fillern
-    end_msg = filler + end_msg_label + fillern
 
     complete_header = start_msg + notice + end_msg
     return complete_header
