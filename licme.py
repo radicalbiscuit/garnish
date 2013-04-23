@@ -120,7 +120,7 @@ def already_has_license():
         print 'If you would like to apply a new license using licme, first'
         print 'remove any license files such as LICENSE, COPYING, or UNLICENSE.'
         if not args.q:
-            print '\n   Conflicting files: \n{0}'.format('\n    '.join(possible_licenses))
+            print '\n  Conflicting files: \n    {0}'.format('\n    '.join(possible_licenses))
         print '\nNo changes have been made.'
         sys.exit(1)
     else:
@@ -152,7 +152,7 @@ def fill_template(args):
     text = text.replace('LICENSE_FILENAME', LIC_DETAILS[args.license][1])
     return text
 
-def install_license(args):
+def install_license():
     lic_source = os.path.join('licenses',args.license)
     with open(LIC_DETAILS[args.license][1],'a') as new_license_file:
         with open(lic_source,'r') as license_source:
@@ -160,8 +160,8 @@ def install_license(args):
             new_license_file.write(the_license)
             print LIC_DETAILS[args.license][1] + ' file created'
 
-def install_headers(args):
-    comments_chars = {
+def install_headers():
+    comment_chars = {
         '.py':'#',
         '.rb': '#',
         '.pl': '#',
@@ -265,7 +265,7 @@ def build_header_message(args, filetype):
    # filetype variable, return a string containing the appropriate in-file
    # licensing header string.
 
-    if filetype in comments_chars.keys():
+    if filetype in comment_chars.keys():
         comment_char = comments_chars[filetype]
     else:
         print 'Could not add header to {0}. Unknown filetype.'.format(filename)
@@ -301,7 +301,7 @@ def add_headers_to_files(args, list_of_files):
     # license header to each one.
     header_messages = {}
     for file_to_check in list_of_files:
-        filetype = re.search('\..+$', filename).group(0)
+        filetype = re.search('\..+$', file_to_check).group(0)
         if filetype in header_messages.keys():
             add_header_to_file(file_to_check, header_messages[filetype])
         else:
