@@ -5,6 +5,7 @@ import argparse
 import sys
 import datetime
 import os
+import re
 
 CWD = os.getcwd()
 
@@ -190,12 +191,16 @@ def write_readme():
     with open(readme_filename,'a') as readme:
         with open(os.path.join('readme-statements',args.license),'r') as ADD_TO_README:
             text_to_add = ADD_TO_README.read()
-            text_to_add = text_to_add.replace('OWNER_NAME',
-                    args.copyright_holder)
-            text_to_add = text_to_add.replace('COPYRIGHT_YEAR', args.year)
-            text_to_add = text_to_add.replace('PROGRAM_NAME', args.program_name)
+            text_to_add = fill_template(text_to_add)
             readme.writelines('\n\n'+ text_to_add)
             print 'Copyright statement added to ' + readme_filename
+
+def fill_template(text):
+    text = text.replace('OWNER_NAME', args.copyright_holder)
+    text = text.replace('COPYRIGHT_YEAR', args.year)
+    text = text.replace('PROGRAM_NAME', args.program_name)
+    text = text.replace('LICENSE_FILENAME', LIC_DETAILS[args.license][1])
+    return text
 
 def install_license():
     lic_source = os.path.join('licenses',args.license)
@@ -204,6 +209,32 @@ def install_license():
             the_license = license_source.read()
             new_license_file.write(the_license)
             print LIC_DETAILS[args.license][1] + ' file created'
+
+def add_header_to_file(filename):
+    with open(filename, 'w') as filetoedit:
+        file_contents = filetoedit.read()
+        filetype = re.search('\..+', filename).group(0)
+        if filetype in COMMENT_CHAR.keys():
+            comment_char = COMMENT_CHAR[filetype]
+        else:
+            print 'Could not add header to {0}. Unknown
+            filetype.'.format(filename)
+            return
+
+        start_msg_label = ' BEGIN LICENSE BLOCK '
+        end_msg_label = ' END LICENSE BLOCK '
+        filler = 10 * comment_char
+        fillern = filler + '\n'
+
+        notice = open(os.path.join('header-statements',args.license),'r').read()
+        notice = fill_template(notice)
+
+        start_msg = filler + start_msg_label + fillern
+        end_msg = filler + end_msg_label + fillern
+
+        complete_header = start_msg + notice + end_msg
+
+        filetoend.write(complete_header + file_contents)
 
 if __name__ == "__main__":
     check_arguments()
