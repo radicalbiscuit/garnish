@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 import argparse
@@ -256,7 +257,8 @@ def remove_header_from_file(filename, header):
         except:
             pass
 
-        modified_text = original_text[0:start] + original_text[end+1:]
+        if end != 0:
+            modified_text = original_text[0:start] + original_text[end+1:]
 
     with open(filename, 'w') as modified_file:
         modified_file.writelines(modified_text)
