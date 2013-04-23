@@ -38,62 +38,6 @@ LIC_DETAILS = {
              'LICENSE', False]}
 
 
-COMMENT_CHARS = {
-        '.py':'#',
-        '.rb': '#',
-        '.pl': '#',
-        '.pm': '#',
-        '.php': '#',
-        '.php3': '#',
-        '.php4': '#',
-        '.php5': '#',
-        '.phps': '#',
-        '.cobra': '#',
-        '.sh': '#',
-        '.tex': '%',
-        '.hs': '--',
-        '.lhs': '--',
-        '.sql': '--',
-        '.abd': '--',
-        '.ads': '--',
-        '.scpt': '--',
-        '.AppleScript': '--',
-        '.lua': '--',
-        '.as': '//',
-        '.h': '//',
-        '.c': '//',
-        '.hh': '//',
-        '.hpp': '//',
-        '.hxx': '//',
-        '.h++': '//',
-        '.cc': '//',
-        '.cp': '//',
-        '.cpp': '//',
-        '.cxx': '//',
-        '.c++': '//',
-        '.d': '//',
-        '.go': '//',
-        '.java': '//',
-        '.class': '//',
-        '.jar': '//',
-        '.js': '//',
-        '.p': '//',
-        '.pp': '//',
-        '.pas': '//',
-        '.xib': '//',
-        '.scala': '//',
-        '.sass': '//',
-        '.f': '!',
-        '.for': '!',
-        '.f90': '!',
-        '.f95': '!',
-        '.lisp ': ';',
-        '.clj': ';',
-        '.r': ';',
-        '.scm': ';',
-        '.ss': ';'
-        }
-
 parser = argparse.ArgumentParser(prog="LICME",
         description="""
     LICME is designed to help take the pain out of boilerplate licensing.
@@ -195,11 +139,11 @@ def write_readme():
             readme.writelines('\n\n'+ text_to_add)
             print 'Copyright statement added to ' + readme_filename
 
-def fill_template(text):
-    text = text.replace('OWNER_NAME', args.copyright_holder)
-    text = text.replace('COPYRIGHT_YEAR', args.year)
-    text = text.replace('PROGRAM_NAME', args.program_name)
-    text = text.replace('LICENSE_FILENAME', LIC_DETAILS[args.license][1])
+def fill_template(text, author, year, program, filename):
+    text = text.replace('OWNER_NAME', author)
+    text = text.replace('COPYRIGHT_YEAR', year)
+    text = text.replace('PROGRAM_NAME', program)
+    text = text.replace('LICENSE_FILENAME', filename)
     return text
 
 def install_license():
@@ -210,35 +154,118 @@ def install_license():
             new_license_file.write(the_license)
             print LIC_DETAILS[args.license][1] + ' file created'
 
-def add_header_to_file(filename):
-    with open(filename, 'w') as filetoedit:
+def build_header_message(args, filetype):
+   # Given license information in the args and a file extension string in
+   # filetype variable, return a string containing the appropriate in-file
+   # licensing header string.
+
+    comments_chars = {
+        '.py':'#',
+        '.rb': '#',
+        '.pl': '#',
+        '.pm': '#',
+        '.php': '#',
+        '.php3': '#',
+        '.php4': '#',
+        '.php5': '#',
+        '.phps': '#',
+        '.cobra': '#',
+        '.sh': '#',
+        '.tex': '%',
+        '.hs': '--',
+        '.lhs': '--',
+        '.sql': '--',
+        '.abd': '--',
+        '.ads': '--',
+        '.scpt': '--',
+        '.AppleScript': '--',
+        '.lua': '--',
+        '.as': '//',
+        '.h': '//',
+        '.c': '//',
+        '.hh': '//',
+        '.hpp': '//',
+        '.hxx': '//',
+        '.h++': '//',
+        '.cc': '//',
+        '.cp': '//',
+        '.cpp': '//',
+        '.cxx': '//',
+        '.c++': '//',
+        '.d': '//',
+        '.go': '//',
+        '.java': '//',
+        '.class': '//',
+        '.jar': '//',
+        '.js': '//',
+        '.p': '//',
+        '.pp': '//',
+        '.pas': '//',
+        '.xib': '//',
+        '.scala': '//',
+        '.sass': '//',
+        '.f': '!',
+        '.for': '!',
+        '.f90': '!',
+        '.f95': '!',
+        '.lisp ': ';',
+        '.clj': ';',
+        '.r': ';',
+        '.scm': ';',
+        '.ss': ';'
+            }
+
+    if filetype in comments_chars.keys():
+        comment_char = comments_chars[filetype]
+    else:
+        print 'Could not add header to {0}. Unknown filetype.'.format(filename)
+        return
+
+    start_msg_label = ' BEGIN LICENSE BLOCK '
+    end_msg_label = ' END LICENSE BLOCK '
+    filler = 10 * comment_char
+    fillern = filler + '\n'
+
+    notice = open(os.path.join('header-statements',args.license),'r').readlines()
+    notice = map(fill_template, notice)
+    notice = [comment_char + ' ' + x for x in notice]
+    notice = ''.join(notice)
+
+    start_msg = filler + start_msg_label + fillern
+    end_msg = filler + end_msg_label + fillern
+
+    complete_header = start_msg + notice + end_msg
+    return complete_header
+
+def add_header_to_file(filename, header_message):
+    # Add a given license header message to the file
+    # with name "filename"
+    with open(filename, 'r+') as filetoedit:
         file_contents = filetoedit.read()
+
+        complete_header = build_header_message(args.license)
+
+        filetoedit.write(complete_header + file_contents)
+
+def add_headers_to_files(args, list_of_files):
+    # Take a list of filenames and add an appropriate
+    # license header to each one.
+    header_messages = {}
+    for file_to_check in list_of_files:
         filetype = re.search('\..+', filename).group(0)
-        if filetype in COMMENT_CHAR.keys():
-            comment_char = COMMENT_CHAR[filetype]
+        if filetype in header_messages.keys():
+            add_header_to_file(file_to_check, header_messages[filetype])
         else:
-            print 'Could not add header to {0}. Unknown
-            filetype.'.format(filename)
-            return
+            header_messages[filetype] = build_header_message(args, filetype)
+            add_header_to_file(file_to_check, header_messages[filetype])
 
-        start_msg_label = ' BEGIN LICENSE BLOCK '
-        end_msg_label = ' END LICENSE BLOCK '
-        filler = 10 * comment_char
-        fillern = filler + '\n'
-
-        notice = open(os.path.join('header-statements',args.license),'r').read()
-        notice = fill_template(notice)
-
-        start_msg = filler + start_msg_label + fillern
-        end_msg = filler + end_msg_label + fillern
-
-        complete_header = start_msg + notice + end_msg
-
-        filetoend.write(complete_header + file_contents)
 
 if __name__ == "__main__":
-    check_arguments()
-    if not already_has_license():
-        install_license()
-        if args.r:
-            write_readme()
+    add_header_to_file('testfile.py')
+    add_header_to_file('testfile.rb')
+    add_header_to_file('testfile.scala')
+    # check_arguments()
+    # if not already_has_license():
+    #     install_license()
+     #    if args.r:
+      #       write_readme()
