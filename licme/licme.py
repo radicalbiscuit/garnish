@@ -135,7 +135,7 @@ def check_arguments():
 def already_has_license():
     """ returns boolean value indicating whether there is
     already a file in the current working directory that has
-    'license' in the filename
+    'license' or similar in the filename
     """
     common_license_filenames = ['license',
                                 'copying',
@@ -159,9 +159,11 @@ def already_has_license():
         return False
 
 def find_readme():
-    """ Finds the filename of any existing readme (regardless of file extension)
+    """
+    Finds the filename of any existing readme (regardless of file extension)
     and returns the name of the file.  If none is found, 'README' is
-    returned."""
+    returned.
+    """
     readme_file = [x for x in os.listdir(CWD) if x is 'README' or 'readme.' in x.lower()]
     if len(readme_file) == 0:
         return 'README'
@@ -169,6 +171,12 @@ def find_readme():
         return readme_file[0]
 
 def update_readme():
+    """
+    Adds a brief copyright and licensing statement to the readme file. For
+    longer licenses the reader is referred to the appropriate
+    COPYING/LICENSE/etc file, while for shorter licenses (BSD, MIT, etc) the
+    full license is appended to the README.
+    """
     readme_filename = find_readme()
     with open(readme_filename,'a') as readme:
         with open(os.path.join('readme-statements',args.license),'r') as ADD_TO_README:
@@ -178,6 +186,10 @@ def update_readme():
             print 'Copyright statement added to ' + readme_filename
 
 def fill_template(temp):
+    """
+    Takes a template string (temp) and replaces all template keywords with
+    information from commandline arguments.
+    """
     temp = temp.replace('OWNER_NAME', args.copyright_holder)
     temp = temp.replace('COPYRIGHT_YEAR', args.year)
     temp = temp.replace('PROGRAM_NAME', args.program_name)
@@ -185,14 +197,37 @@ def fill_template(temp):
     return temp
 
 def install_license():
+    """
+    Writes appropriate license text to LICENSE, COPYING, or other file. The name of
+    the file will vary according to convention.  E.g. GPL projects often put the
+    license into COPYING, projects using the "unlicense" are requested to use
+    UNLICENSE, etc.
+    """
     lic_source = os.path.join('licenses',args.license)
     with open(LIC_DETAILS[args.license][1],'a') as new_license_file:
         with open(lic_source,'r') as license_source:
             the_license = license_source.read()
             new_license_file.write(the_license)
-            print LIC_DETAILS[args.license][1] + ' file created'
+    if not args.q:
+        print LIC_DETAILS[args.license][1] + ' file created.'
 
 def install_headers():
+    """
+    This function handles the installation and removal of in-file licensing
+    notices.
+
+    The default behavior is to adds a brief copyright header message to every file and file in a
+    subdirectory, except those files whose "type" cannot be identified from
+    filename suffix or files/filetypes that are excluded by the user when
+    prompted.  The list of subfiles to be edited is compiled by a different
+    function (list_files_subdirectories).
+
+    If the -r option is used on the command line, install_headers() will remove
+    any license notices that have previously been installed by the program.  I
+    considered making a separate uninstall_headers(), but decided to keep these
+    together in one scope so as to avoid repeating the massive comment_chars
+    dict or resorting to global variables.
+    """
     comment_chars = {
         '.py':'#',
         '.rb': '#',
@@ -249,11 +284,15 @@ def install_headers():
         '.ss': ';'
             }
 
+    # Uninstall previously installed header notices
     if args.remove_headers:
         exclusions = []
-        files_to_fix = get_files_to_add_header(exclusions, comment_chars.keys())
+        files_to_fix = list_files_subdirectories(exclusions, comment_chars.keys())
         print len(files_to_fix), files_to_fix
         remove_headers_from_files(files_to_fix, comment_chars)
+
+    # Since the -r remove_header option was not used, proceed with adding new header
+    # notices.
     else:
         exclude = raw_input('Would you like to exclude any files from in-file license notice? (y/n) ') in 'yY'
         if exclude:
@@ -263,7 +302,7 @@ def install_headers():
         else:
             exclusions = []
 
-        files_to_prepend = get_files_to_add_header(exclusions, comment_chars.keys())
+        files_to_prepend = list_files_subdirectories(exclusions, comment_chars.keys())
         add_headers_to_files(args, files_to_prepend, comment_chars)
 
 def remove_headers_from_files(files_to_fix, comment_chars):
@@ -296,9 +335,11 @@ def remove_header_from_file(filename, header):
 
 
 def build_header_message(args, filetype, comment_chars):
-   # Given license information in the args and a file extension string in
-   # filetype variable, return a string containing the appropriate in-file
-   # licensing header string.
+    """
+    Given license information in the args and a file extension string in
+    filetype variable, return a string containing the appropriate in-file
+    licensing header string.
+    """
 
     if filetype in comment_chars.keys():
         comment_char = comment_chars[filetype]
@@ -339,7 +380,7 @@ def add_headers_to_files(args, list_of_files, comment_chars):
             add_header_to_file(file_to_check, header_messages[filetype])
 
 
-def get_files_to_add_header(exclusions, whitelist):
+def list_files_subdirectories(exclusions, whitelist):
     # Returns a recursive list of all files an all directories,
     # excluding .subdirectories and any explicit exclusions.
     # The exclusions argument should be a list of strings,
