@@ -122,6 +122,10 @@ parser.add_argument('-q', '--quiet',
 args = parser.parse_args()
 
 def check_arguments():
+    """
+    Checks for obvious conflicts in options given by the user.  If any are
+    found, stops execution.
+    """
     help = 'Try -h for help information.'
     if args.license not in LIC_DETAILS.keys():
         print 'You have entered an invalid license name.'
@@ -158,17 +162,6 @@ def already_has_license():
     else:
         return False
 
-def find_readme():
-    """
-    Finds the filename of any existing readme (regardless of file extension)
-    and returns the name of the file.  If none is found, 'README' is
-    returned.
-    """
-    readme_file = [x for x in os.listdir(CWD) if x is 'README' or 'readme.' in x.lower()]
-    if len(readme_file) == 0:
-        return 'README'
-    else:
-        return readme_file[0]
 
 def update_readme():
     """
@@ -177,7 +170,15 @@ def update_readme():
     COPYING/LICENSE/etc file, while for shorter licenses (BSD, MIT, etc) the
     full license is appended to the README.
     """
-    readme_filename = find_readme()
+
+    # Check if there is already a readme file
+    readme_file = [x for x in os.listdir(CWD) if x is 'README' or 'readme.' in x.lower()]
+    if len(readme_file) == 0:
+        readme_filename = 'README'
+    else:
+        readme_filename = readme_file[0]
+
+    # Append notice to the README
     with open(readme_filename,'a') as readme:
         with open(os.path.join('readme-statements',args.license),'r') as ADD_TO_README:
             text_to_add = ADD_TO_README.read()
