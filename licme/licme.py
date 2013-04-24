@@ -286,7 +286,7 @@ def install_headers():
         '.r': ';',
         '.scm': ';',
         '.ss': ';'
-            }
+    }
 
     # If user has requested with -r option, uninstall previously installed header notices
     if args.remove_headers:
@@ -310,8 +310,8 @@ def install_headers():
         add_headers_to_files(files_to_prepend, comment_chars)
 
 
-def remove_headers_from_files(files_to_fix):
-    for filename in files_to_fix:
+def remove_headers_from_files(list_of_files):
+    for filename in list_of_files:
         with open(filename, 'r') as original_file:
             original_text = original_file.readlines()
             beginmsg = ':::::::::::::::: BEGIN LICENSE BLOCK :::::::::::::::'
@@ -379,12 +379,14 @@ def add_headers_to_files(list_of_files, comment_chars):
 
 
 def list_files_in_subdirs(exclusions, whitelist):
-    # Returns a recursive list of all files an all directories,
-    # excluding .subdirectories and any explicit exclusions.
-    # The exclusions argument should be a list of strings,
-    # either file extensions or filenames.  For example,
-    # ['.txt', 'README.md', 'not_this.py'].  Comparisons are
-    # done with endswith instead of regex to keep this flexible.
+    """
+    Returns a recursive list of all files an all directories,
+    excluding .subdirectories and any explicit exclusions.
+    The exclusions argument should be a list of strings,
+    either file extensions or filenames.  For example,
+    ['.txt', 'README.md', 'not_this.py'].  Comparisons are
+    done with endswith instead of regex to keep this flexible.
+    """
 
     pathlist = []
     excluded_files = []
