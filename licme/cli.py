@@ -61,6 +61,8 @@ class Licme(object):
 
     def run(self):
         self.args = self.parser.parse_args()
+        self.check_if_already_has_license()
+        self.validate_cli_arguments()
 
 
     def setup_parser(self):
@@ -176,7 +178,7 @@ class Licme(object):
                                     'license.txt',
                                     'unlicense.txt',
                                     'copying.txt']
-        cwd_files = os.listdir(CWD)
+        cwd_files = os.listdir(self.cwd)
         possible_licenses = [x for x in cwd_files if x.lower() in
                 common_license_filenames]
         if len(possible_licenses) != 0:
