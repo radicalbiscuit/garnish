@@ -1,6 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""
+cli.py
+=========
+
+Description: A command line tool for adding boilerplate licensing to your open
+source projects.
+
+Author: Jennifer Hamon (jhamon@gmail.com)
+
+License: MIT (see LICENSE)
+"""
+
 import argparse
 import sys
 import datetime
@@ -178,3 +190,6 @@ class Licme(object):
         else:
             return False
 
+if __name__ == '__main__':
+    my_licme = Licme()
+    my_listme.run()
