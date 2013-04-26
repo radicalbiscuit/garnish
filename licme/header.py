@@ -17,61 +17,20 @@ def install_headers():
     together in one scope so as to avoid repeating the massive comment_chars
     dict or resorting to global variables.
     """
-    comment_chars = {
-        '.py':'#',
-        '.rb': '#',
-        '.pl': '#',
-        '.pm': '#',
-        '.php': '#',
-        '.php3': '#',
-        '.php4': '#',
-        '.php5': '#',
-        '.phps': '#',
-        '.cobra': '#',
-        '.sh': '#',
-        '.tex': '%',
-        '.hs': '--',
-        '.lhs': '--',
-        '.sql': '--',
-        '.abd': '--',
-        '.ads': '--',
-        '.scpt': '--',
-        '.AppleScript': '--',
-        '.lua': '--',
-        '.as': '//',
-        '.h': '//',
-        '.c': '//',
-        '.hh': '//',
-        '.hpp': '//',
-        '.hxx': '//',
-        '.h++': '//',
-        '.cc': '//',
-        '.cp': '//',
-        '.cpp': '//',
-        '.cxx': '//',
-        '.c++': '//',
-        '.d': '//',
-        '.go': '//',
-        '.java': '//',
-        '.class': '//',
-        '.jar': '//',
-        '.js': '//',
-        '.p': '//',
-        '.pp': '//',
-        '.pas': '//',
-        '.xib': '//',
-        '.scala': '//',
-        '.sass': '//',
-        '.f': '!',
-        '.for': '!',
-        '.f90': '!',
-        '.f95': '!',
-        '.lisp ': ';',
-        '.clj': ';',
-        '.r': ';',
-        '.scm': ';',
-        '.ss': ';'
-    }
+    poundsign = '.py .rb .pl .pm .php .php3 .php4 .php5 .phps .cobra .sh'.split(' ')
+    dashes = '.hs .lhs .sql .abd .ads .scpt .AppleScript .lua'.split(' ')
+    slashes = '.as .h .c .hh .hpp .hxx .h++ .cc .cp .cpp .cxx .c++ ' +
+        '.d .go .java .class .jar .js .p .pp .pas .xib .scala .sass'
+    slashes = slashes.split(' ')
+    exclamation = '.f .for .f90 .f95'.split(' ')
+    semicolon = '.lisp .clj .r .scm .ss'.split(' ')
+
+    comment_chars = {item:'#' for item in poundsign}
+    comment_chars.update({item:'--' for item in dashes})
+    comment_chars.update({item:'//' for item in slahes})
+    comment_chars.update({item:'!' for item in exclamation})
+    comment_chars.update({item:';' for item in semicolon})
+    comment_chars['.tex'] = '%'
 
     # If user has requested with -r option, uninstall previously installed header notices
     if args.remove_headers:
