@@ -21,34 +21,44 @@ import re
 import licme.headers
 import licme.utils
 
+# Do usage guidelines for this license recommend an in-file copyright and
+# licensing notice in every source file?  If yes, store that license name into
+# this list.
+recommend_infile = 'mpl1.1 lgpl2.1 gpl1 gpl2 gpl3 mpl2 agpl3 apache2 artistic'.split(' ')
 
-# This dictionary keys license argument to ["longform license name", "license filename",
-# boolean: recommend in-file notice?]
-LIC_DETAILS = {
-#        'artistic': ['Perl Foudation Artistic License, Version 2.0', 'LICENSE',
-#        True],
-             'agpl3': ['GNU Affero General Public License, Version 3.0',
-                 'LICENSE', True],
-#             'apache2': ['Apache License 2.0', 'LICENSE', True],
-#             'bsd3': ['BSD 3-Clause License', 'LICENSE', False],
-#             'bsd2': ['BSD 2-Clause License', 'LICENSE', False],
-             'gpl2': ['GNU General Public License, Version 2.0', 'COPYING', True],
-             'gpl3': ['GNU General Public License, Version 3.0', 'COPYING', True],
-#             'lgpl3': ['GNU Lesser General Public License, Version 3.0'
-#                 ,'COPYING.LESSER', True],
-             'mit': ['MIT License' ,'LICENSE', False],
-#             'mpl2': ['Mozilla Public License, Version 2.0', 'LICENSE', True],
-             'gpl1': ['GNU General Public License, Version 1.0', 'COPYING', True],
-#            'lgpl2': ['GNU Lesser General Public License, Version 2.0',
-#            'COPYING.LESSER', True],
-#             'lgpl2.1': ['GNU Lesser General Public License, Version 2.1',
-#             'COPYING.LESSER', True],
-#             'mpl1.1': ['Mozilla Public License, Version 1.1', 'LICENSE', True],
-             'crapl': ['Community Research and Academic Programming License',
-                 'LICENSE', False],
-#             'unlicense': ['Unlicense', 'UNLICENSE', False],
-             'wtfpl': ['Do What the Fuck You Want To Public License, Version 2',
-             'LICENSE', False]}
+# Some licenses have special recommendations for the name of the file in which
+# the full license text is stored.  In practice it shouldn't matter, but it is
+# good to follow tradition. The name of the license file is stored in a
+# dictionary, keyed by license name.
+filename_LICENSE = 'mit agpl3 apache2 bsd3 bsd2 mpl2 crapl wtfpl'.split(' ')
+filename_COPYING = 'gpl1 gpl2 gpl3'.split(' ')
+filename_COPYINGLESSER = 'lgpl2.1 lgpl2'.split(' ')
+filename_UNLICENSE = ['unlicense']
+license_filenames = {key:'LICENSE' for key in filename_LICENSE}
+license_filenames.update({key:'COPYING' for key in filename_COPYING})
+license_filenames.update({key:'COPYING.LESSER' for key in filename_COPYINGLESSER})
+license_filenames.update({key:'UNLICENSE' for key in filename_UNLICENSE})
+
+# To fill some templates, we need to know the "long" version of each filename.
+# Those are also stored in a dictionary.
+longnames = {}
+longnames['wtfpl'] = 'Do What the Fuck You Want To Public License, Version 2'
+longnames['unlicense'] = 'Unlicense'
+longnames['artistic'] = 'Perl Foundation Artistic License, Version 2.0'
+longnames['agpl3'] = 'GNU Affero General Public License, Version 3.0'
+longnames['apache2'] = 'Apache License 2.0'
+longnames['bsd3'] = 'BSD 3-Clause License'
+longnames['bsd2'] = 'BSD 2-Clause License'
+longnames['gpl2'] = 'GNU General Public License, Version 2.0'
+longnames['gpl3'] = 'GNU General Public License, Version 3.0'
+longnames['lgpl3'] = 'GNU Lesser General Public License, Version 3.0'
+longnames['lgpl2'] = 'GNU Lesser General Public License, Version 2.0'
+longnames['lgpl2.1'] = 'GNU Lesser General Public License, Version 2.1'
+longnames['mit'] = 'MIT License'
+longnames['mpl2'] = 'Mozilla Public License, Version 2.0'
+longnames['mpl1.1'] = 'Mozilla Public License, Version 1.1'
+longnames['gpl1'] = 'GNU General Public License, Version 1.0'
+longnames['crapl'] = 'Community Research and Academic Programming License'
 
 
 
