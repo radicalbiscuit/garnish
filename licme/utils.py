@@ -50,12 +50,4 @@ def install_license():
     if not args.q:
         print LIC_DETAILS[args.license][1] + ' file created.'
 
-if __name__ == "__main__":
-    check_arguments()
-    if args.remove_headers:
-        install_headers()
-    elif not already_has_license():
-        install_license()
-        install_headers()
-        if args.r:
-            update_readme()
+

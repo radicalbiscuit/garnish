@@ -19,7 +19,7 @@ import datetime
 import os
 import re
 from licme.headers import Header
-from licme.utils import install_license, update_readme, fill_template
+from licme.utils import install_license, update_readme
 
 
 
@@ -35,6 +35,17 @@ class Licme(object):
         self.validate_cli_arguments()
         self.setup_license_details()
         self.check_if_already_has_license()
+
+        if self.args.r:
+            update_readme()
+
+        if self.args.remove_headers:
+            Header.install_headers()
+            self.args.remove_headers = False
+
+        install_license()
+        Header.install_headers()
+
 
     def setup_parser(self):
         """
