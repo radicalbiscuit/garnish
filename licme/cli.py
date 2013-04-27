@@ -18,8 +18,8 @@ import sys
 import datetime
 import os
 import re
-from licme.headers import Header
-from licme.utils import install_license, update_readme
+from headers import Header
+from utils import install_license, update_readme
 
 
 
