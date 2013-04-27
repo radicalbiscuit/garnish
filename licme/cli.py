@@ -37,7 +37,9 @@ class Licme(object):
         self.check_if_already_has_license()
 
     def setup_parser(self):
-        """ returns argparse instance """
+        """
+        Returns argparse instance, with command line options configured
+        """
 
         parser = argparse.ArgumentParser(prog="LICME",
                 description="""
@@ -123,15 +125,21 @@ class Licme(object):
         return parser
 
     def setup_license_details(self):
-        # Do usage guidelines for this license recommend an in-file copyright and
-        # licensing notice in every source file?  If yes, store that license name into
-        # this list.
+        """
+        Defines the following:
+            self.longname => string
+            self.recommend_infile => boolean
+            self.license_filename => string
+        """
+
+        # This is a list of all licenses whose usage guidelines recommend a copyright
+        # and brief licensing notice be present in each file.
         recommend_infile = 'mpl1.1 lgpl2.1 gpl1 gpl2 gpl3 mpl2 agpl3 apache2 artistic'.split(' ')
 
         # Some licenses have special recommendations for the name of the file in which
         # the full license text is stored.  In practice it shouldn't matter, but it is
-        # good to follow tradition. The name of the license file is stored in a
-        # dictionary, keyed by license name.
+        # good to follow tradition. The prefered name of the license file is stored in a
+        # dictionary license_filenames, keyed by license name.
         filename_LICENSE = 'mit agpl3 apache2 bsd3 bsd2 mpl2 crapl wtfpl'.split(' ')
         filename_COPYING = 'gpl1 gpl2 gpl3'.split(' ')
         filename_COPYINGLESSER = 'lgpl2.1 lgpl2'.split(' ')
@@ -141,8 +149,8 @@ class Licme(object):
         license_filenames.update({key:'COPYING.LESSER' for key in filename_COPYINGLESSER})
         license_filenames.update({key:'UNLICENSE' for key in filename_UNLICENSE})
 
-    # To fill some templates, we need to know the "long" version of each filename.
-    # Those are also stored in a dictionary.
+        # To fill some templates, we need to know the "long" version of each filename.
+        # Those are also stored in a dictionary.
         longnames = {}
         longnames['wtfpl'] = 'Do What the Fuck You Want To Public License, Version 2'
         longnames['unlicense'] = 'Unlicense'
