@@ -46,6 +46,13 @@ class Licme(object):
         install_license()
         Header.install_headers()
 
+    def exit(self, *bad=None):
+        if bad:
+            print 'The operation was not completed successfully.'
+            sys.exit(1)
+        else:
+            sys.exit(0)
+
 
     def setup_parser(self):
         """
@@ -194,11 +201,11 @@ class Licme(object):
         if args.license not in LIC_DETAILS.keys():
             print 'You have entered an invalid license name.'
             print help
-            sys.exit(1)
+            self.exit(bad=True)
         if args.remove_headers and args.add_headers:
             print 'You have used conflicting header options.'
             print help
-            sys.exit(1)
+            self.exit(bad=True)
 
     def check_if_already_has_license(self):
         """ returns boolean value indicating whether there is
@@ -219,10 +226,10 @@ class Licme(object):
             print 'This repository appears to contain license information already.'
             print 'If you would like to apply a new license using licme, first'
             print 'remove any license files such as LICENSE, COPYING, or UNLICENSE.'
-            if not args.q:
+            if not self.args.q:
                 print '\n  Conflicting files: \n    {0}'.format('\n    '.join(possible_licenses))
             print '\nNo changes have been made.'
-            sys.exit(1)
+            self.exit(bad=True)
         else:
             return False
 
