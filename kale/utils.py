@@ -23,18 +23,6 @@ def update_readme():
             print 'Copyright statement added to ' + readme_filename
 
 
-def fill_template(temp):
-    """
-    Takes a template string (temp) and replaces all template keywords with
-    information from commandline arguments.
-    """
-    temp = temp.replace('OWNER_NAME', args.copyright_holder)
-    temp = temp.replace('COPYRIGHT_YEAR', args.year)
-    temp = temp.replace('PROGRAM_NAME', args.program_name)
-    temp = temp.replace('LICENSE_FILENAME', LIC_DETAILS[args.license][1])
-    return temp
-
-
 def install_license():
     """
     Writes appropriate license text to LICENSE, COPYING, or other file. The name of

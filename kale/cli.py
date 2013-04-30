@@ -23,7 +23,7 @@ from utils import install_license, update_readme
 
 
 
-class kale(object):
+class Kale(object):
     """ main class for cli licensing tool """
 
     def __init__(self):
@@ -233,6 +233,18 @@ class kale(object):
         else:
             return False
 
+    def fill_template(temp):
+        """
+        Takes a template string (temp) and replaces all template keywords with
+        information from commandline arguments.
+        """
+        temp = temp.replace('OWNER_NAME', self.args.copyright_holder)
+        temp = temp.replace('COPYRIGHT_YEAR', self.args.year)
+        temp = temp.replace('PROGRAM_NAME', self.args.program_name)
+        temp = temp.replace('LICENSE_LONGNAME', self.longname)
+        temp = temp.replace('LICENSE_FILENAME', self.license_filename)
+        return temp
+
 if __name__ == '__main__':
-    my_kale = kale()
-    my_listme.run()
+    my_kale = Kale()
+    my_kale.run()
