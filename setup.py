@@ -17,6 +17,10 @@ setup(name='garnish',
       packages = ['garnish'],
       package_data = {'garnish' : ['header-statements/*', 'readme-statements/*',
       'licenses/*']},
+      classifiers = ['Intended Audience :: Developers',
+                    'License :: OSI Approved :: MIT License',
+                    'Operating System :: OS Independent',
+                    'Topic :: Software Development :: Documentation'],
       keywords = 'opensource gpl mit bsd licenses licensing',
       entry_points = {'console_scripts': ['garnish=garnish.cli:main']}
       )
