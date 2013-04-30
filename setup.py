@@ -2,15 +2,15 @@
 
 from distutils.core import setup
 
-setup(name='licme',
-      version='0.1',
+setup(name='kale',
+      version='0.1.0',
       description='Boilerplate licensing tool',
       author='Jennifer Hamon',
       author_email='jhamon@gmail.com',
-      url='http://www.github.com/jhamon/licme',
-      packages = ['licme'],
-      scripts='licme/licme.py',
-      package_data = {'licme' : ['header-statements/*', 'readme-statements/*',
+      url='http://www.github.com/jhamon/kale',
+      packages = ['kale'],
+      scripts='kale/kale.py',
+      package_data = {'kale' : ['header-statements/*', 'readme-statements/*',
       'licenses/*']},
       license = 'MIT License'
       )
