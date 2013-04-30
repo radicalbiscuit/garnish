@@ -2,9 +2,9 @@
 
 from setuptools import setup
 
-from kale.__init__ import __version__ as VERSION
+from garnish.__init__ import __version__ as VERSION
 
-setup(name='kale',
+setup(name='garnish',
       license='MIT License',
       version=VERSION,
       description='Command-line tool for adding boilerplate licensing to your open-source projects. GPL, MIT, and BSD licenses supported.',
@@ -13,10 +13,10 @@ setup(name='kale',
       author_email='jhamon@gmail.com',
       maintainer='Jennifer Hamon',
       install_requires=['setuptools'],
-      url='http://www.github.com/jhamon/kale',
-      packages = ['kale'],
-      package_data = {'kale' : ['header-statements/*', 'readme-statements/*',
+      url='http://www.github.com/jhamon/garnish',
+      packages = ['garnish'],
+      package_data = {'garnish' : ['header-statements/*', 'readme-statements/*',
       'licenses/*']},
       keywords = 'opensource gpl mit bsd licenses licensing',
-      entry_points = {'console_scripts': ['kale=kale.cli:main']}
+      entry_points = {'console_scripts': ['garnish=garnish.cli:main']}
       )

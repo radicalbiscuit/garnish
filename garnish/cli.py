@@ -23,7 +23,7 @@ from utils import install_license, update_readme
 
 
 
-class Kale(object):
+class Garnish(object):
     """ main class for cli licensing tool """
 
     def __init__(self):
@@ -59,25 +59,25 @@ class Kale(object):
         Returns argparse instance, with command line options configured
         """
 
-        parser = argparse.ArgumentParser(prog="kale",
+        parser = argparse.ArgumentParser(prog="garnish",
                 description="""
-            kale is designed to help take the pain out of boilerplate licensing.
+            garnish is designed to help take the pain out of boilerplate licensing.
             You specify the copyright holder and the name of a popular open
-            source license, and kale will create the appropriate LICENSE file
+            source license, and garnish will create the appropriate LICENSE file
             in your project directory.  Copyright and license information will be
             appended to your existing README file, or one will be created for you
             if it does not already exist.
 
         BASIC EXAMPLE
 
-            $ kale gpl3 "Free Software Foundation, Inc." "Emacs 24"
-            $ kale mit "Jennifer Hamon" "kale"
+            $ garnish gpl3 "Free Software Foundation, Inc." "Emacs 24"
+            $ garnish mit "Jennifer Hamon" "garnish"
 
                 """,
                 formatter_class=argparse.RawDescriptionHelpFormatter,
                 epilog="""
         SUPPORTED LICENSES
-            kale supports many popular and interesting software licenses.
+            garnish supports many popular and interesting software licenses.
 
             Popular:
                     artistic  Perl Foudation Artistic License, Version 2.0
@@ -105,8 +105,8 @@ class Kale(object):
 
 
         CONTRIBUTING
-            If there is another license you would like to see included in kale,
-            please submit a pull request at http://www.github.com/jhamon/kale
+            If there is another license you would like to see included in garnish,
+            please submit a pull request at http://www.github.com/jhamon/garnish
                 """)
 
         parser.add_argument('license',
@@ -130,7 +130,7 @@ class Kale(object):
             default=False,
             dest='add_headers')
         parser.add_argument('-r', '--remove-sourcefile-headers',
-            help='remove in-file license notices previously applied by kale',
+            help='remove in-file license notices previously applied by garnish',
             action='store_true',
             default=False,
             dest='remove_headers')
@@ -224,7 +224,7 @@ class Kale(object):
                 common_license_filenames]
         if len(possible_licenses) != 0:
             print 'This repository appears to contain license information already.'
-            print 'If you would like to apply a new license using kale, first'
+            print 'If you would like to apply a new license using garnish, first'
             print 'remove any license files such as LICENSE, COPYING, or UNLICENSE.'
             if not self.args.q:
                 print '\n  Conflicting files: \n    {0}'.format('\n    '.join(possible_licenses))
@@ -246,5 +246,5 @@ class Kale(object):
         return temp
 
 if __name__ == '__main__':
-    my_kale = Kale()
-    my_kale.run()
+    my_garnish = Garnish()
+    my_garnish.run()

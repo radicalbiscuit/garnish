@@ -1,5 +1,5 @@
 """
-kale/__init__.py
+garnish/__init__.py
 
 Author: Jennifer Hamon
     jhamon@gmail.com
