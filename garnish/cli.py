@@ -18,7 +18,7 @@ import sys
 import datetime
 import os
 import re
-from headers import Header
+from header import Header
 from utils import install_license, update_readme
 
 
@@ -32,8 +32,9 @@ class Garnish(object):
 
     def run(self):
         self.args = self.parser.parse_args()
-        self.validate_cli_arguments()
+        self.license = self.args.license
         self.setup_license_details()
+        self.validate_cli_arguments()
         self.check_if_already_has_license()
 
         if self.args.r:
@@ -148,6 +149,7 @@ class Garnish(object):
             self.longname => string
             self.recommend_infile => boolean
             self.license_filename => string
+            self.supported_licenses => list
         """
 
         # This is a list of all licenses whose usage guidelines recommend a copyright
@@ -166,6 +168,11 @@ class Garnish(object):
         license_filenames.update({key:'COPYING' for key in filename_COPYING})
         license_filenames.update({key:'COPYING.LESSER' for key in filename_COPYINGLESSER})
         license_filenames.update({key:'UNLICENSE' for key in filename_UNLICENSE})
+
+        # Store supported licenses into an object variable for reference during the
+        # option validation step.
+        self.supported_licenses = filename_LICENSE + filename_COPYING
+        self.supported_licenses += filename_COPYINGLESSER + ['unlicense']
 
         # To fill some templates, we need to know the "long" version of each filename.
         # Those are also stored in a dictionary.
@@ -198,11 +205,11 @@ class Garnish(object):
         found, stops execution.
         """
         help = 'Try -h for help information.'
-        if args.license not in LIC_DETAILS.keys():
+        if self.args.license not in self.supported_licenses:
             print 'You have entered an invalid license name.'
             print help
             self.exit(bad=True)
-        if args.remove_headers and args.add_headers:
+        if self.args.remove_headers and self.args.add_headers:
             print 'You have used conflicting header options.'
             print help
             self.exit(bad=True)
@@ -245,6 +252,9 @@ class Garnish(object):
         temp = temp.replace('LICENSE_FILENAME', self.license_filename)
         return temp
 
-if __name__ == '__main__':
+def main():
     my_garnish = Garnish()
     my_garnish.run()
+
+if __name__ == '__main__':
+    main()
