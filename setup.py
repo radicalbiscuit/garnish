@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(name='kale',
       version='0.1.0',
-      description='Boilerplate licensing tool',
+      description='Command-line boilerplate licensing tool',
       author='Jennifer Hamon',
       author_email='jhamon@gmail.com',
       url='http://www.github.com/jhamon/kale',
