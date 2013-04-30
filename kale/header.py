@@ -19,8 +19,8 @@ class Header(object):
         """
         poundsign = '.py .rb .pl .pm .php .php3 .php4 .php5 .phps .cobra .sh'.split(' ')
         dashes = '.hs .lhs .sql .abd .ads .scpt .AppleScript .lua'.split(' ')
-        slashes = '.as .h .c .hh .hpp .hxx .h++ .cc .cp .cpp .cxx .c++ ' +
-            '.d .go .java .class .jar .js .p .pp .pas .xib .scala .sass'
+        slashes = '.as .h .c .hh .hpp .hxx .h++ .cc .cp .cpp .cxx .c++ '
+        slashes += '.d .go .java .class .jar .js .p .pp .pas .xib .scala .sass'
         slashes = slashes.split(' ')
         exclamation = '.f .for .f90 .f95'.split(' ')
         semicolon = '.lisp .clj .r .scm .ss'.split(' ')

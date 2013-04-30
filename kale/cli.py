@@ -46,7 +46,7 @@ class Kale(object):
         install_license()
         Header.install_headers()
 
-    def exit(self, *bad=None):
+    def exit(self, bad=None):
         if bad:
             print 'The operation was not completed successfully.'
             sys.exit(1)
