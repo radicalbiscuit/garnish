@@ -16,7 +16,7 @@ License: MIT (see LICENSE)
 import argparse
 import sys
 import datetime
-import pkg_data
+from pkg_resources import resource_stream
 import os
 import re
 from header import Header
@@ -240,7 +240,7 @@ class Garnish(object):
         else:
             return False
 
-    def fill_template(temp):
+    def fill_template(self, temp):
         """
         Takes a template string (temp) and replaces all template keywords with
         information from commandline arguments.
@@ -260,9 +260,12 @@ class Garnish(object):
         license into COPYING, projects using the "unlicense" are requested to use
         UNLICENSE, etc.
         """
-        lic_source = os.path.join('licenses', self.license)
+        resource_name = 'licenses/' + self.license
+        # pkg_resource API explicitly asks for names joined by '/' regardless of
+        # OS.  os.path.join is not recommended.
+
         with open(self.license_filename,'a') as new_license_file:
-            with open(lic_source,'r') as license_source:
+            with resource_stream('garnish', resource_name) as license_source:
                 the_license = license_source.read()
                 new_license_file.write(the_license)
         if not self.args.q:
@@ -287,11 +290,14 @@ class Garnish(object):
 
         # Append notice to the README
         with open(readme_filename,'a') as readme:
-            with open(os.path.join('readme-statements',self.license),'r') as ADD_TO_README:
-                text_to_add = ADD_TO_README.read()
-                text_to_add = fill_template(text_to_add)
-                readme.writelines('\n\n'+ text_to_add)
-                print 'Copyright statement added to ' + readme_filename
+            resource_location = 'readme-statements/' + self.license
+            # Again, pkg_resource API requires paths joined by '/'.
+            # Don't use os.path.join
+            readme_statement = resource_stream('garnish', resource_location)
+            text_to_add = readme_statement.read()
+            text_to_add = self.fill_template(text_to_add)
+            readme.writelines('\n\n'+ text_to_add)
+            print 'Copyright statement added to ' + readme_filename
 
 
 def main():
