@@ -1,0 +1,3 @@
+recursive-include header-statements
+recursive-include readme-statements
+recursive-include licenses
