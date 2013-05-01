@@ -16,10 +16,10 @@ License: MIT (see LICENSE)
 import argparse
 import sys
 import datetime
+import pkg_data
 import os
 import re
 from header import Header
-from utils import install_license, update_readme
 
 
 
@@ -38,13 +38,13 @@ class Garnish(object):
         self.check_if_already_has_license()
 
         if self.args.r:
-            update_readme()
+            self.update_readme()
 
         if self.args.remove_headers:
             Header.install_headers()
             self.args.remove_headers = False
 
-        install_license()
+        self.install_license()
         Header.install_headers()
 
     def exit(self, bad=None):
@@ -251,6 +251,48 @@ class Garnish(object):
         temp = temp.replace('LICENSE_LONGNAME', self.longname)
         temp = temp.replace('LICENSE_FILENAME', self.license_filename)
         return temp
+
+
+    def install_license(self):
+        """
+        Writes appropriate license text to LICENSE, COPYING, or other file. The name of
+        the file will vary according to convention.  E.g. GPL projects often put the
+        license into COPYING, projects using the "unlicense" are requested to use
+        UNLICENSE, etc.
+        """
+        lic_source = os.path.join('licenses', self.license)
+        with open(self.license_filename,'a') as new_license_file:
+            with open(lic_source,'r') as license_source:
+                the_license = license_source.read()
+                new_license_file.write(the_license)
+        if not self.args.q:
+            print filename + ' file created.'
+
+
+    def update_readme(self):
+        """
+        Adds a brief copyright and licensing statement to the readme file. For
+        longer licenses the reader is referred to the appropriate
+        COPYING/LICENSE/etc file, while for shorter licenses (BSD, MIT, etc) the
+        full license is appended to the README.
+        """
+
+        # Check if there is already a readme file
+        dirlist = os.listdir(self.cwd)
+        readme_file = [x for x in dirlist if x is 'README' or 'readme.' in x.lower()]
+        if len(readme_file) == 0:
+            readme_filename = 'README'
+        else:
+            readme_filename = readme_file[0]
+
+        # Append notice to the README
+        with open(readme_filename,'a') as readme:
+            with open(os.path.join('readme-statements',self.license),'r') as ADD_TO_README:
+                text_to_add = ADD_TO_README.read()
+                text_to_add = fill_template(text_to_add)
+                readme.writelines('\n\n'+ text_to_add)
+                print 'Copyright statement added to ' + readme_filename
+
 
 def main():
     my_garnish = Garnish()
