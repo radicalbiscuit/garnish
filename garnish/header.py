@@ -1,5 +1,8 @@
 
 class Header(object):
+    def __init__(self, args):
+        self.args = args
+
     def install_headers(self):
         """
         This function handles the installation and removal of in-file licensing

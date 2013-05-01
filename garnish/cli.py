@@ -43,7 +43,7 @@ class Garnish(object):
             self.args.remove_headers = False
 
         self.install_license()
-        Header().install_headers()
+        Header(self.args).install_headers()
 
     def exit(self, bad=None):
         if bad:
