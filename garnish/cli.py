@@ -16,12 +16,10 @@ License: MIT (see LICENSE)
 import argparse
 import sys
 import datetime
-from pkg_resources import resource_stream
 import os
 import re
 from header import Header
-
-
+import pkg_resources
 
 class Garnish(object):
     """ main class for cli licensing tool """
@@ -45,7 +43,7 @@ class Garnish(object):
             self.args.remove_headers = False
 
         self.install_license()
-        Header.install_headers()
+        Header().install_headers()
 
     def exit(self, bad=None):
         if bad:
@@ -265,11 +263,12 @@ class Garnish(object):
         # OS.  os.path.join is not recommended.
 
         with open(self.license_filename,'a') as new_license_file:
-            with resource_stream('garnish', resource_name) as license_source:
-                the_license = license_source.read()
-                new_license_file.write(the_license)
+            license_source = pkg_resources.resource_stream('garnish', resource_name)
+            the_license = license_source.read()
+            new_license_file.write(the_license)
+            license_source.close()
         if not self.args.q:
-            print filename + ' file created.'
+            print self.license_filename + ' file created.'
 
 
     def update_readme(self):
@@ -293,7 +292,7 @@ class Garnish(object):
             resource_location = 'readme-statements/' + self.license
             # Again, pkg_resource API requires paths joined by '/'.
             # Don't use os.path.join
-            readme_statement = resource_stream('garnish', resource_location)
+            readme_statement = pkg_resources.resource_stream('garnish', resource_location)
             text_to_add = readme_statement.read()
             text_to_add = self.fill_template(text_to_add)
             readme.writelines('\n\n'+ text_to_add)
