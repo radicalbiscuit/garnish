@@ -27,7 +27,7 @@ class Header(object):
 
         comment_chars = {item:'#' for item in poundsign}
         comment_chars.update({item:'--' for item in dashes})
-        comment_chars.update({item:'//' for item in slahes})
+        comment_chars.update({item:'//' for item in slashes})
         comment_chars.update({item:'!' for item in exclamation})
         comment_chars.update({item:';' for item in semicolon})
         comment_chars['.tex'] = '%'
