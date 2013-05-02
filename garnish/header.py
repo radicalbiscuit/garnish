@@ -121,8 +121,8 @@ class Header(object):
             start_msg = comment_char + self.start_msg
             end_msg = comment_char + self.end_msg
 
-            notice_resource = 'header-statements/' + self.args.license
-            notice = pkg_resources.resource_stream('garnish', notice_resource)
+            notice_resource = 'data/header-template'
+            notice = pkg_resources.resource_stream('garnish/', notice_resource)
             notice = notice.readlines()
 
             notice = [fill_template(x, self.args, self.longname, self.license_filename, self.url) for x in notice]
