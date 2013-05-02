@@ -26,37 +26,50 @@ limits its usefulness to the community.
 This project aims to reduce the "pain" of creating boilerplate LICENSE files for
 your FOSS projects. 
 
-## How to use
+## Quickstart guide 
 
-Run `garnish` in your project root directory to create a `LICENSE` file containing
-the standard license of your choice.  To see a full list of options  
+For python devs, installing the latest release of garnish is as simple as 
 
-    $ garnish --help
-    $ garnish gpl3 "GNU Foundation" "Emacs 23.0"
+    pip install garnish
+
+If you're not a regular python user, you can also install it the standard way
+
+    git clone git://github.com/jhamon/garnish.git
+    cd garnish
+    python setup.py install
+
+Next nagivate to your project root, and use the following syntax on the command
+line
+
+    garnish <license name> <copyright holder> <your awesome project name> 
+
+A few examples of basic usage:
+
+    garnish gpl3 "GNU Foundation" "Emacs" 
+    garnish mit "Google Inc" "Angular JS"
+
+To see the full list of available licenses, type `garnish -h`.
 
 Garnish can also add copyright and licensing notices at the beginning of your
 source files; this is standard practice with some projects and some licenses.
-For licenses that recommend this practice, the user will be prompted
-interactively on whether they want to apply the in-file copyright notices.
+Those licenses which recommend the use of headers will prompt you about it.  For
+licenses that recommend this practice, the user will be prompted interactively
+o. 
 
-## Installation instructions
-
-    git clone http://www.github.com/jhamon/garnish
-    cd garnish 
-    sh install.sh
-
-## Sources
-
-The license text installed by the the `garnish` command line tool is taken from the
-Open Source Initiative  
+For those licenses which don't recommend in-file copyright and license notices,
+you can still explicitly ask garnish to apply them with the `-w` or
+`--with-headers` options if you would like.  copyright notices.
 
 ## License
 
 Garnish is Copyright (c) 2013 Jennifer Hamon (jhamon@gmail.com) and released under
 the MIT license. For details about this license, please see the text of LICENSE. 
 
-## About the author
+## Contacting the author
 
-My name is Jennifer Hamon.  I am not a lawyer, and this software does not
-provide legal advice.  However, if you've found this software useful, I'd love
-to hear from you.  Reach out on twitter @xorq or email jhamon@gmail.com.
+I am not a lawyer, and this software does not provide legal advice.  However, if
+you've found this software useful, I'd love to hear from you.  Reach out on
+twitter @xorq or email jhamon@gmail.com.
+
+Please report any issues or problems, please use the github issue tracker
+available at [here](https://github.com/jhamon/garnish/issues).
