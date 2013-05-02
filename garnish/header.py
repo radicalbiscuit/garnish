@@ -1,3 +1,6 @@
+import os
+import pkg_resources
+import re
 
 class Header(object):
     def __init__(self, args):
@@ -36,16 +39,17 @@ class Header(object):
         comment_chars['.tex'] = '%'
 
         # If user has requested with -r option, uninstall previously installed header notices
-        if args.remove_headers:
+        if self.args.remove_headers:
             exclusions = []
-            files_to_fix = list_files_in_subdirs(exclusions, comment_chars.keys())
+            files_to_fix = self.list_files_in_subdirs(exclusions, comment_chars.keys())
             print len(files_to_fix), files_to_fix
-            remove_headers_from_files(files_to_fix, comment_chars)
+            self.remove_headers_from_files(files_to_fix, comment_chars)
 
         # Since the -r remove_header option was not used, proceed with adding new header
         # notices.
         else:
-            exclude = raw_input('Would you like to exclude any files from in-file license notice? (y/n) ') in 'yY'
+            exclude_stmt = 'Would you like to exclude any files from in-file license notice? (y/n)'
+            exclude = raw_input(exclude_stmt) in 'yY'
             if exclude:
                 exclusions = raw_input('Enter extensions or filenames, space delimited: ')
                 exclusions = exclusions.split(' ')
@@ -53,8 +57,8 @@ class Header(object):
             else:
                 exclusions = []
 
-            files_to_prepend = list_files_in_subdirs(exclusions, comment_chars.keys())
-            add_headers_to_files(files_to_prepend, comment_chars)
+            files_to_prepend = self.list_files_in_subdirs(exclusions, comment_chars.keys())
+            self.add_headers_to_files(files_to_prepend, comment_chars)
 
 
     def remove_headers_from_files(self, list_of_files):
@@ -106,7 +110,9 @@ class Header(object):
             start_msg = comment_char + ' :::::::::::::::: BEGIN LICENSE BLOCK :::::::::::::::'
             end_msg = comment_char + ' ::::::::::::::::  END LICENSE BLOCK  :::::::::::::::'
 
-            notice = open(os.path.join('header-statements',args.license),'r').readlines()
+            notice_resource = 'header-statements/' + self.args.license
+            notice = pkg_resources.resource_stream('garnish', notice_resource)
+            notice = notice.readlines()
             notice = map(fill_template, notice)
             notice = [comment_char + ' ' + x for x in notice]
             notice = ''.join(notice)
@@ -150,7 +156,7 @@ class Header(object):
                 else:
                     excluded_files.append(os.path.join(item))
 
-        if excluded_files and not args.q:
+        if excluded_files and not self.args.q:
             print 'The following files did not receive an in-file licensing  notice, '
             print 'because you specified them or I wasn\'t sure what type of file it '
             print 'was based on the file extension: '
