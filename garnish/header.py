@@ -8,6 +8,9 @@ class Header(object):
         self.args = args
         self.longname = longname
         self.license_filename = license_filename
+        self.start_msg = ' :::::::::::::::: BEGIN LICENSE BLOCK :::::::::::::::\n'
+        self.end_msg = ' ::::::::::::::::  END LICENSE BLOCK  :::::::::::::::\n\n'
+
 
     def install_headers(self):
         """
@@ -46,7 +49,7 @@ class Header(object):
             exclusions = []
             files_to_fix = self.list_files_in_subdirs(exclusions, comment_chars.keys())
             print len(files_to_fix), files_to_fix
-            self.remove_headers_from_files(files_to_fix, comment_chars)
+            self.remove_headers_from_files(files_to_fix)
 
         # Since the -r remove_header option was not used, proceed with adding new header
         # notices.
@@ -68,17 +71,15 @@ class Header(object):
         for filename in list_of_files:
             with open(filename, 'r') as original_file:
                 original_text = original_file.readlines()
-                beginmsg = ':::::::::::::::: BEGIN LICENSE BLOCK :::::::::::::::\n'
-                endmsg = '::::::::::::::::  END LICENSE BLOCK  :::::::::::::::\n\n'
+                beginmsg = self.start_msg
+                endmsg = self.end_msg
 
                 start = [k for k,v in enumerate(original_text) if beginmsg in v][0]
                 end = [k for k,v in enumerate(original_text) if endmsg in v][0]
                 if end != []:
                     modified_text = original_text[0:start] + original_text[end+1:]
-                    print 'nuhhhhhh'
                 else:
                     modified_text = original_text
-                    print 'asdfasdf'
 
             with open(filename, 'w') as modified_file:
                 modified_file.writelines(modified_text)
@@ -110,8 +111,8 @@ class Header(object):
                 print 'Could not add header to {0}. Unknown filetype.'.format(filename)
                 return
 
-            start_msg = comment_char + ' :::::::::::::::: BEGIN LICENSE BLOCK :::::::::::::::'
-            end_msg = comment_char + ' ::::::::::::::::  END LICENSE BLOCK  :::::::::::::::'
+            start_msg = comment_char + self.start_msg
+            end_msg = comment_char + self.end_msg
 
             notice_resource = 'header-statements/' + self.args.license
             notice = pkg_resources.resource_stream('garnish', notice_resource)
