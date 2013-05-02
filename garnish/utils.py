@@ -1,4 +1,4 @@
-def fill_template(temp, args, longname, filename):
+def fill_template(temp, args, longname, filename, url):
     """
     Takes a template string (temp) and replaces all template keywords with
     information from commandline arguments.
@@ -8,4 +8,5 @@ def fill_template(temp, args, longname, filename):
     temp = temp.replace('PROGRAM_NAME', args.program_name)
     temp = temp.replace('LICENSE_LONGNAME', longname)
     temp = temp.replace('LICENSE_FILENAME', filename)
+    temp = temp.replace('LICENSE_URL', url)
     return temp

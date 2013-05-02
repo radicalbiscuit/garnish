@@ -4,9 +4,10 @@ import re
 from utils import fill_template
 
 class Header(object):
-    def __init__(self, args, longname, license_filename):
+    def __init__(self, args, longname, license_filename, url):
         self.args = args
         self.longname = longname
+        self.url = url
         self.license_filename = license_filename
         self.start_msg = ' :::::::::::::::: BEGIN LICENSE BLOCK :::::::::::::::\n'
         self.end_msg = ' ::::::::::::::::  END LICENSE BLOCK  :::::::::::::::\n\n'
@@ -124,7 +125,7 @@ class Header(object):
             notice = pkg_resources.resource_stream('garnish', notice_resource)
             notice = notice.readlines()
 
-            notice = [fill_template(x, self.args, self.longname, self.license_filename) for x in notice]
+            notice = [fill_template(x, self.args, self.longname, self.license_filename, self.url) for x in notice]
             notice = [comment_char + ' ' + x for x in notice]
             notice = ''.join(notice)
 

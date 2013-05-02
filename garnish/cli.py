@@ -40,11 +40,11 @@ class Garnish(object):
             self.update_readme()
 
         if self.args.remove_headers:
-            Header(self.args, self.longname, self.license_filename).install_headers()
+            Header(self.args, self.longname, self.license_filename, self.url).install_headers()
             self.args.remove_headers = False
 
         self.install_license()
-        Header(self.args, self.longname, self.license_filename).install_headers()
+        Header(self.args, self.longname, self.license_filename, self.url).install_headers()
 
     def exit(self, bad=None):
         if bad:
@@ -194,7 +194,29 @@ class Garnish(object):
         longnames['gpl1'] = 'GNU General Public License, Version 1.0'
         longnames['crapl'] = 'Community Research and Academic Programming License'
 
+        urls = {}
+
+        urls['wtfpl'] = 'http://www.wtfpl.net/'
+        urls['unlicense'] = 'http://unlicense.org/'
+        urls['artistic'] = 'http://dev.perl.org/licenses/artistic.html'
+        urls['agpl3'] = 'http://www.gnu.org/licenses/agpl.html'
+        urls['apache2'] = 'http://www.apache.org/licenses/LICENSE-2.0.html'
+        urls['bsd3'] = 'http://opensource.org/licenses/BSD-3-Clause'
+        urls['bsd2'] = 'http://opensource.org/licenses/BSD-2-Clause'
+        urls['gpl2'] = 'http://www.gnu.org/licenses/gpl-2.0.html'
+        urls['gpl3'] = 'http://www.gnu.org/licenses/gpl.html'
+        urls['lgpl3'] = 'http://www.gnu.org/copyleft/lesser.html'
+        urls['lgpl2'] = 'http://www.gnu.org/licenses/lgpl-2.0.html'
+        urls['lgpl2.1'] = 'http://www.gnu.org/licenses/lgpl-2.1.html'
+        urls['mit'] = 'http://opensource.org/licenses/MIT'
+        urls['mpl2'] = 'http://www.mozilla.org/MPL/2.0/'
+        urls['mpl1.1'] = 'http://www.mozilla.org/MPL/1.1/'
+        urls['gpl1'] = 'http://www.gnu.org/licenses/gpl-1.0.html'
+        urls['crapl'] = 'http://matt.might.net/articles/crapl/'
+
+
         self.longname = longnames[self.license]
+        self.url = urls[self.license]
         self.recommend_infile = self.license in recommend_infile
         self.license_filename = license_filenames[self.license]
 
@@ -283,7 +305,7 @@ class Garnish(object):
             # Don't use os.path.join
             readme_statement = pkg_resources.resource_stream('garnish', resource_location)
             text_to_add = readme_statement.read()
-            text_to_add = fill_template(text_to_add, self.args, self.longname, self.license_filename)
+            text_to_add = fill_template(text_to_add, self.args, self.longname, self.license_filename, self.url)
             readme.writelines('\n\n'+ text_to_add)
             print 'Copyright statement added to ' + readme_filename
 
