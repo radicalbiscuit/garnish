@@ -68,8 +68,8 @@ class Header(object):
         for filename in list_of_files:
             with open(filename, 'r') as original_file:
                 original_text = original_file.readlines()
-                beginmsg = ':::::::::::::::: BEGIN LICENSE BLOCK :::::::::::::::'
-                endmsg = '::::::::::::::::  END LICENSE BLOCK  :::::::::::::::'
+                beginmsg = ':::::::::::::::: BEGIN LICENSE BLOCK :::::::::::::::\n'
+                endmsg = '::::::::::::::::  END LICENSE BLOCK  :::::::::::::::\n\n'
 
                 start = [k for k,v in enumerate(original_text) if beginmsg in v][0]
                 end = [k for k,v in enumerate(original_text) if endmsg in v][0]
