@@ -19,8 +19,9 @@ import datetime
 import os
 import re
 from header import Header
-from utils import fill_template, exit, rewrap_text
+from utils import fill_template, exit, wrap_paragraphs
 import pkg_resources
+import textwrap
 
 class Garnish(object):
     """ main class for cli licensing tool """
@@ -303,6 +304,7 @@ class Garnish(object):
             readme_statement = pkg_resources.resource_stream('garnish', resource_location)
             text_to_add = readme_statement.read()
             text_to_add = fill_template(text_to_add, self.args, self.longname, self.license_filename, self.url)
+            text_to_add = wrap_paragraphs(text_to_add, 80)
             readme.writelines('\n\n'+ text_to_add)
             print 'Copyright statement added to ' + readme_filename
 
