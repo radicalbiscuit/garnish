@@ -8,15 +8,12 @@ responsible for any data loss that may occur as a result of using this tool.
 # TODO list:
 
     - Add some unit tests
-    - Install.sh?
     - Write documentation
-    - Read about distutils to figure out how packaging should be handled
     - Add header-statements templates for more licenses
-    - register twitter account for project
-    - How to upload projects to pypi?
     - Better code syntax detection? Filename suffix is not sufficient for
       perl/prolog .pl problem.
     - Allow user-defined header notices
+    - Check for existence of headers before adding new ones
 
 
 # garnish - taking the work out of boilerplate licensing 
