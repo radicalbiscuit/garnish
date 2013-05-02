@@ -1,3 +1,8 @@
 *.pyc
 *.egg-info
-
+build/
+dist/
+garnish/.Python
+garnish/include/
+garnish/lib/
+garnish_proj/
