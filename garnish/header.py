@@ -74,9 +74,11 @@ class Header(object):
                 beginmsg = self.start_msg
                 endmsg = self.end_msg
 
-                start = [k for k,v in enumerate(original_text) if beginmsg in v][0]
-                end = [k for k,v in enumerate(original_text) if endmsg in v][0]
+                start = [k for k,v in enumerate(original_text) if beginmsg in v]
+                end = [k for k,v in enumerate(original_text) if endmsg in v]
                 if end != []:
+                    start = start[0]
+                    end = end[0]
                     modified_text = original_text[0:start] + original_text[end+1:]
                 else:
                     modified_text = original_text
