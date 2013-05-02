@@ -1,7 +1,7 @@
 import os
 import pkg_resources
 import re
-from utils import fill_template
+from utils import fill_template, exit, rewrap_text
 
 class Header(object):
     def __init__(self, args, longname, license_filename, url):
@@ -11,6 +11,21 @@ class Header(object):
         self.license_filename = license_filename
         self.start_msg = ' :::::::::::::::: BEGIN LICENSE BLOCK :::::::::::::::\n'
         self.end_msg = ' ::::::::::::::::  END LICENSE BLOCK  :::::::::::::::\n\n'
+
+        self.setup_template()
+
+
+    def setup_template(self):
+        if self.args.custom_header:
+            try:
+                self.template = open(args.custom_header, 'r').readlines()
+            except IOError:
+                print 'Could not open ', self.args.custom_header
+                exit(bad=True)
+        else:
+            template_resource = 'data/header-template'
+            template = pkg_resources.resource_stream('garnish/', template_resource)
+            self.template = template.readlines()
 
 
     def install_headers(self):
@@ -121,11 +136,9 @@ class Header(object):
             start_msg = comment_char + self.start_msg
             end_msg = comment_char + self.end_msg
 
-            notice_resource = 'data/header-template'
-            notice = pkg_resources.resource_stream('garnish/', notice_resource)
-            notice = notice.readlines()
+            temp = self.template
 
-            notice = [fill_template(x, self.args, self.longname, self.license_filename, self.url) for x in notice]
+            notice = [fill_template(x, self.args, self.longname, self.license_filename, self.url) for x in temp]
             notice = [comment_char + ' ' + x for x in notice]
             notice = ''.join(notice)
 
