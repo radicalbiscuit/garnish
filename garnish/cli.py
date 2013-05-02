@@ -269,7 +269,7 @@ class Garnish(object):
         license into COPYING, projects using the "unlicense" are requested to use
         UNLICENSE, etc.
         """
-        resource_name = 'licenses/' + self.license
+        resource_name = 'data/licenses/' + self.license
         # pkg_resource API explicitly asks for names joined by '/' regardless of
         # OS.  os.path.join is not recommended.
 
@@ -300,7 +300,7 @@ class Garnish(object):
 
         # Append notice to the README
         with open(readme_filename,'a') as readme:
-            resource_location = 'readme-statements/' + self.license
+            resource_location = 'data/readme-statements/' + self.license
             # Again, pkg_resource API requires paths joined by '/'.
             # Don't use os.path.join
             readme_statement = pkg_resources.resource_stream('garnish', resource_location)
