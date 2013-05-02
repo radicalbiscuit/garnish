@@ -97,9 +97,12 @@ class Header(object):
             with name "filename"
             """
             with open(filename, 'r') as original:
-                file_contents = original.read()
+                file_contents = original.readlines()
             with open(filename, 'w') as modified:
-                modified.write(header_message + file_contents)
+                if file_contents[0].startswith('#!'):
+                    modified.write(file_contents[0] + header_message + ''.join(file_contents[1:]))
+                else:
+                    modified.write(header_message + ''.join(file_contents))
 
         def build_header_message(filetype):
             """
