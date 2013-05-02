@@ -5,15 +5,6 @@ by the software could be lost.  Consequently, **do not use garnish on work that 
 not been commited to your repository.**  As per the MIT License, I am not
 responsible for any data loss that may occur as a result of using this tool.
 
-# TODO list:
-
-    - Add some unit tests
-    - Write documentation
-    - Add header-statements templates for more licenses
-    - Better code syntax detection? Filename suffix is not sufficient for
-      perl/prolog .pl problem.
-    - Allow user-defined header notices
-    - Check for existence of headers before adding new ones
 
 
 # garnish - taking the work out of boilerplate licensing 
