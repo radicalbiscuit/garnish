@@ -19,7 +19,7 @@ import datetime
 import os
 import re
 from header import Header
-from utils import fill_template
+from utils import fill_template, exit, rewrap_text
 import pkg_resources
 
 class Garnish(object):
@@ -45,14 +45,6 @@ class Garnish(object):
 
         self.install_license()
         Header(self.args, self.longname, self.license_filename, self.url).install_headers()
-
-    def exit(self, bad=None):
-        if bad:
-            print 'The operation was not completed successfully.'
-            sys.exit(1)
-        else:
-            sys.exit(0)
-
 
     def setup_parser(self):
         """
@@ -234,11 +226,11 @@ class Garnish(object):
         if self.args.license not in self.supported_licenses:
             print 'You have entered an invalid license name.'
             print help
-            self.exit(bad=True)
+            exit(bad=True)
         if self.args.remove_headers and self.args.add_headers:
             print 'You have used conflicting header options.'
             print help
-            self.exit(bad=True)
+            exit(bad=True)
 
     def check_if_already_has_license(self):
         """ returns boolean value indicating whether there is
@@ -262,7 +254,7 @@ class Garnish(object):
             if not self.args.q:
                 print '\n  Conflicting files: \n    {0}'.format('\n    '.join(possible_licenses))
             print '\nNo changes have been made.'
-            self.exit(bad=True)
+            exit(bad=True)
         else:
             return False
 
