@@ -125,15 +125,28 @@ class Header(object):
             complete_header = start_msg + notice + end_msg
             return complete_header
 
+        def has_header(file_to_check):
+            """
+            Takes a filename.
+            Returns boolean indicating whether that file appears to contain an
+            in-file copyright and licensing notice previously applied by
+            garnish.
+            """
+
+            file_contents = open(file_to_check).readlines()
+            has_notice = [self.start_msg in line for line in file_contents]
+            return has_notice.count(True) != 0
+
         # Store header messages as they are built using file extension as keys.
         header_messages = {}
         for file_to_check in list_of_files:
-            filetype = re.search('\..+$', file_to_check).group(0)
-            if filetype in header_messages.keys():
-                add_header_to_file(file_to_check, header_messages[filetype])
-            else:
-                header_messages[filetype] = build_header_message(filetype, comment_chars)
-                add_header_to_file(file_to_check, header_messages[filetype])
+            if not has_header(file_to_check):
+                filetype = re.search('\..+$', file_to_check).group(0)
+                if filetype in header_messages.keys():
+                    add_header_to_file(file_to_check, header_messages[filetype])
+                else:
+                    header_messages[filetype] = build_header_message(filetype, comment_chars)
+                    add_header_to_file(file_to_check, header_messages[filetype])
 
 
     def list_files_in_subdirs(self, exclusions, whitelist):
