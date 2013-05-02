@@ -17,18 +17,18 @@ class Header(object):
         This function handles the installation and removal of in-file licensing
         notices.
 
-        The default behavior is to adds a brief copyright header message to every file and file in a
-        subdirectory, except those files whose "type" cannot be identified from
-        filename suffix or files/filetypes that are excluded by the user when
-        prompted.  The list of subfiles to be edited is compiled by a different
-        function (list_files_in_subdirs).
+        The default behavior is to adds a brief copyright header message to
+        every file and file in a subdirectory, except those files whose "type"
+        cannot be identified from filename suffix or files/filetypes that are
+        excluded by the user when prompted.  The list of subfiles to be edited
+        is compiled by a different function (list_files_in_subdirs).
 
-        If the -r option is used on the command line, install_headers() will remove
-        any license notices that have previously been installed by the program.  I
-        considered making a separate uninstall_headers(), but decided to keep these
-        together in one scope so as to avoid repeating the massive comment_chars
-        dict or resorting to global variables.
-        """
+        If the -r option is used on the command line, install_headers() will
+        remove any license notices that have previously been installed by the
+        program.  I considered making a separate uninstall_headers(), but
+        decided to keep these together in one scope so as to avoid repeating the
+        massive comment_chars dict or resorting to global variables.  """
+
         poundsign = '.py .rb .pl .pm .php .php3 .php4 .php5 .phps .cobra .sh'.split(' ')
         dashes = '.hs .lhs .sql .abd .ads .scpt .AppleScript .lua'.split(' ')
         slashes = '.as .h .c .hh .hpp .hxx .h++ .cc .cp .cpp .cxx .c++ '
@@ -43,11 +43,12 @@ class Header(object):
         comment_chars.update({item:'!' for item in exclamation})
         comment_chars.update({item:';' for item in semicolon})
         comment_chars['.tex'] = '%'
+        self.comment_chars = comment_chars
 
         # If user has requested with -r option, uninstall previously installed header notices
         if self.args.remove_headers:
             exclusions = []
-            files_to_fix = self.list_files_in_subdirs(exclusions, comment_chars.keys())
+            files_to_fix = self.list_files_in_subdirs(exclusions, self.comment_chars.keys())
             print len(files_to_fix), files_to_fix
             self.remove_headers_from_files(files_to_fix)
 
@@ -63,8 +64,8 @@ class Header(object):
             else:
                 exclusions = []
 
-            files_to_prepend = self.list_files_in_subdirs(exclusions, comment_chars.keys())
-            self.add_headers_to_files(files_to_prepend, comment_chars)
+            files_to_prepend = self.list_files_in_subdirs(exclusions, self.comment_chars.keys())
+            self.add_headers_to_files(files_to_prepend)
 
 
     def remove_headers_from_files(self, list_of_files):
@@ -87,7 +88,7 @@ class Header(object):
                 modified_file.writelines(modified_text)
 
 
-    def add_headers_to_files(self, list_of_files, comment_chars):
+    def add_headers_to_files(self, list_of_files):
         # Take a list of filenames and add an appropriate
         # license header to each one.
         def add_header_to_file(filename, header_message):
@@ -100,15 +101,15 @@ class Header(object):
             with open(filename, 'w') as modified:
                 modified.write(header_message + file_contents)
 
-        def build_header_message(filetype, comment_chars):
+        def build_header_message(filetype):
             """
             Given license information in the args and a file extension string in
             filetype variable, return a string containing the appropriate in-file
             licensing header string.
             """
 
-            if filetype in comment_chars.keys():
-                comment_char = comment_chars[filetype]
+            if filetype in self.comment_chars.keys():
+                comment_char = self.comment_chars[filetype]
             else:
                 print 'Could not add header to {0}. Unknown filetype.'.format(filename)
                 return
@@ -142,13 +143,15 @@ class Header(object):
         # Store header messages as they are built using file extension as keys.
         header_messages = {}
         for file_to_check in list_of_files:
-            if not has_header(file_to_check):
-                filetype = re.search('\..+$', file_to_check).group(0)
-                if filetype in header_messages.keys():
-                    add_header_to_file(file_to_check, header_messages[filetype])
-                else:
-                    header_messages[filetype] = build_header_message(filetype, comment_chars)
-                    add_header_to_file(file_to_check, header_messages[filetype])
+            # Remove any existing header before adding new one
+            if has_header(file_to_check):
+                self.remove_headers_from_files([file_to_check])
+            filetype = re.search('\..+$', file_to_check).group(0)
+            if filetype in header_messages.keys():
+                add_header_to_file(file_to_check, header_messages[filetype])
+            else:
+                header_messages[filetype] = build_header_message(filetype)
+                add_header_to_file(file_to_check, header_messages[filetype])
 
 
     def list_files_in_subdirs(self, exclusions, whitelist):
