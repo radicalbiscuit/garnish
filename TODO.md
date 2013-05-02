@@ -2,11 +2,7 @@
 
     - Add some unit tests
     - Write documentation
-    - Add header-statements templates for more licenses
     - Better code syntax detection? Filename suffix is not sufficient for
       perl/prolog .pl problem.
     - Allow user-defined header notices
-    - Check for existence of headers before adding new ones
-    - custom header statements
-    - organize static stuff into a directory
-    - make a general header template
+    - fix text-wrapping so that template lines do not exceed 80 chars even when long license names are plugged in.
