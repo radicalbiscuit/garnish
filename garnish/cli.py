@@ -139,6 +139,11 @@ class Garnish(object):
             action='store_true',
             default=False,
             dest='q')
+        perser.add_argument('-c', '--custom-header',
+            help='specify a custom template for in-file copyright and licensing notices',
+            nargs=1,
+            action='store',
+            dest='custom_header')
 
         return parser
 
