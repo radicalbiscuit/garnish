@@ -1,10 +1,13 @@
 import os
 import pkg_resources
 import re
+from utils import fill_template
 
 class Header(object):
-    def __init__(self, args):
+    def __init__(self, args, longname, license_filename):
         self.args = args
+        self.longname = longname
+        self.license_filename = license_filename
 
     def install_headers(self):
         """
@@ -113,7 +116,8 @@ class Header(object):
             notice_resource = 'header-statements/' + self.args.license
             notice = pkg_resources.resource_stream('garnish', notice_resource)
             notice = notice.readlines()
-            notice = map(fill_template, notice)
+
+            notice = [fill_template(x, self.args, self.longname, self.license_filename) for x in notice]
             notice = [comment_char + ' ' + x for x in notice]
             notice = ''.join(notice)
 

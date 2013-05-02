@@ -19,6 +19,7 @@ import datetime
 import os
 import re
 from header import Header
+from utils import fill_template
 import pkg_resources
 
 class Garnish(object):
@@ -39,11 +40,11 @@ class Garnish(object):
             self.update_readme()
 
         if self.args.remove_headers:
-            Header.install_headers()
+            Header(self.args, self.longname, self.license_filename).install_headers()
             self.args.remove_headers = False
 
         self.install_license()
-        Header(self.args).install_headers()
+        Header(self.args, self.longname, self.license_filename).install_headers()
 
     def exit(self, bad=None):
         if bad:
@@ -238,18 +239,6 @@ class Garnish(object):
         else:
             return False
 
-    def fill_template(self, temp):
-        """
-        Takes a template string (temp) and replaces all template keywords with
-        information from commandline arguments.
-        """
-        temp = temp.replace('OWNER_NAME', self.args.copyright_holder)
-        temp = temp.replace('COPYRIGHT_YEAR', self.args.year)
-        temp = temp.replace('PROGRAM_NAME', self.args.program_name)
-        temp = temp.replace('LICENSE_LONGNAME', self.longname)
-        temp = temp.replace('LICENSE_FILENAME', self.license_filename)
-        return temp
-
 
     def install_license(self):
         """
@@ -294,7 +283,7 @@ class Garnish(object):
             # Don't use os.path.join
             readme_statement = pkg_resources.resource_stream('garnish', resource_location)
             text_to_add = readme_statement.read()
-            text_to_add = self.fill_template(text_to_add)
+            text_to_add = fill_template(text_to_add, self.args, self.longname, self.license_filename)
             readme.writelines('\n\n'+ text_to_add)
             print 'Copyright statement added to ' + readme_filename
 
