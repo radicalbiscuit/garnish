@@ -1,0 +1,6 @@
+While working on this project, I learned:
+    How to configure setup.py to properly install a command line tool
+    How to include static assets with my package using MANIFEST.in
+    How to include static assets using pkg_resources
+    How to upload code to PyPI
+    About the textwrap module in the python standard lib
