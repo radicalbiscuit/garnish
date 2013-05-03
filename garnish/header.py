@@ -179,7 +179,12 @@ class Header(object):
         either file extensions or filenames.  For example,
         ['.txt', 'README.md', 'not_this.py'].  Comparisons are
         done with endswith instead of regex to keep this flexible.
+        Globbing not supported at this time.
         """
+        always_exclude = '.pdf .mp3 .avi .exe .ai .jpg .png .gif .doc .rtf'
+        always_exclude += ' .svg .zip .tar.gz .gz .mp4 .mpeg'
+        always_exclude = ' '.split(always_exclude)
+        exlucsions.extend(always_exclude)
 
         pathlist = []
         excluded_files = []

@@ -4,5 +4,6 @@
     - Write documentation
     - Better code syntax detection? Filename suffix is not sufficient for
       perl/prolog .pl problem.
-    - Allow user-defined header notices
-    - fix text-wrapping so that template lines do not exceed 80 chars even when long license names are plugged in.
+    - Add readme stmts for more licenses.  These should not all be the same, since for some very short licenses -- e.g. the MIT license -- it makes sense to just tack on the whole license.
+
+
