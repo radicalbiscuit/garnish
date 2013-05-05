@@ -22,6 +22,7 @@ from header import Header
 from utils import fill_template, exit, wrap_paragraphs
 import pkg_resources
 import textwrap
+import logging
 
 class Garnish(object):
     """ main class for cli licensing tool """
@@ -34,6 +35,7 @@ class Garnish(object):
         self.args = self.parser.parse_args()
         self.license = self.args.license
         self.setup_license_details()
+        self.setup_logs()
         self.validate_cli_arguments()
         self.check_if_already_has_license()
 
@@ -140,6 +142,11 @@ class Garnish(object):
 
         return parser
 
+    def setup_logging():
+        logging.basicConfig(filename='.garnish.log',level=logging.DEBUG)
+        logging.info('Starting.')
+
+
     def setup_license_details(self):
         """
         Defines the following:
@@ -224,13 +231,18 @@ class Garnish(object):
         found, stops execution.
         """
         help = 'Try -h for help information.'
+        log_msg = 'Exiting. Failed validate_cli_arguments()'
         if self.args.license not in self.supported_licenses:
             print 'You have entered an invalid license name.'
             print help
+            logging.error('License not supported.')
+            logging.error(log_msg)
             exit(bad=True)
         if self.args.remove_headers and self.args.add_headers:
             print 'You have used conflicting header options.'
             print help
+            logging.error('Cannot simultaneously add and remove headers.')
+            logging.error(log_msg)
             exit(bad=True)
 
     def check_if_already_has_license(self):
@@ -255,6 +267,8 @@ class Garnish(object):
             if not self.args.q:
                 print '\n  Conflicting files: \n    {0}'.format('\n    '.join(possible_licenses))
             print '\nNo changes have been made.'
+            logging.info('A license file is already present: {0}'.format(possible_licenses[0]))
+            logging.info('Exiting.')
             exit(bad=True)
         else:
             return False
@@ -278,6 +292,7 @@ class Garnish(object):
             license_source.close()
         if not self.args.q:
             print self.license_filename + ' file created.'
+        logging.info('{0} file created.'.format(self.license_filename))
 
 
     def update_readme(self):
@@ -306,7 +321,9 @@ class Garnish(object):
             text_to_add = fill_template(text_to_add, self.args, self.longname, self.license_filename, self.url)
             text_to_add = wrap_paragraphs(text_to_add, 80)
             readme.writelines('\n\n'+ text_to_add)
-            print 'Copyright statement added to ' + readme_filename
+            status_msg = 'Copyright statement added to ' + readme_filename
+            print status_msg
+            logging.info(status_msg)
 
 
 def main():
